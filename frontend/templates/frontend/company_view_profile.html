@@ -21,6 +21,10 @@
                                 <thead>
                                 <th>Name</th>
                                 <th>GST Number</th>
+                                <th>PAN Number</th>
+                                <th>CGST Rate@%</th>
+                                <th>SGST Rate@%</th>
+                                <th>IGST Rate@%</th>
                                 <th>Address</th>
                                 <th>City</th>
                                 <th>State</th>
@@ -29,8 +33,12 @@
                                 <th>Last Name</th>
                                 <th>Phone Number</th>
                                 <th>Email Address</th>
-                                <th>Juridiction Text</th>
-                                <th>Notes</th>
+                                <th>Bank Name</th>
+                                <th>Account Number</th>
+                                <th>Branch Code</th>
+                                <th>Remarks</th>
+                                <th>Terms And Conditions</th>
+                                <th>Authorise Representative</th>
                                 <th>Actions</th>
                                 </thead>
                                 <tbody>
@@ -38,6 +46,10 @@
                                 <tr>
                                     <td>{{company.name}}</td>
                                     <td>{{company.GST}}</td>
+                                    <td>{{company.PAN}}</td>
+                                    <td>{{company.CGST}}</td>
+                                    <td>{{company.SGST}}</td>
+                                    <td>{{company.IGST}}</td>
                                     <td>{{company.address}}</td>
                                     <td>{{company.city}}</td>
                                     <td>{{company.state}}</td>
@@ -46,10 +58,14 @@
                                     <td>{{company.last_lame}}</td>
                                     <td>{{company.phone_number}}</td>
                                     <td>{{company.email}}</td>
-                                    <td>{{company.juridiction_text}}</td>
-                                    <td>{{company.note}}</td>
-                                    <td><a href="edit/{{company.id}}">Edit</a> <a
-                                            href="delete/{{company.id}}">Delete</a></td>
+                                    <td>{{company.bank_name}}</td>
+                                    <td>{{company.account_number}}</td>
+                                    <td>{{company.IFSC}}</td>
+                                    <td>{{company.remarks}}</td>
+                                    <td>{{company.terms}}</td>
+                                    <td>{{company.authorise}}</td>
+                                    <td><a href="{% url 'frontend:company:company_edit' id=company.id %}">Edit</a> <a
+                                            href="{% url 'frontend:company:company_remove' id=company.id %}">Delete</a></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

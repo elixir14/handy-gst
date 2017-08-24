@@ -63,7 +63,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>GST Number</label> <input type="text"
                                                                          class="form-control" name="GST"
@@ -71,8 +71,41 @@
                                                                          value="{{companyprofile.GST}}">
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>PAN Number</label> <input type="text"
+                                                                         class="form-control" name="PAN"
+                                                                         placeholder="Enter PAN No"
+                                                                         value="{{companyprofile.PAN}}">
+                                    </div>
+                                </div>
                             </div>
-
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>CGST Rate@%</label> <input type="text"
+                                                                   class="form-control" name="CGST"
+                                                                   placeholder="Enter CGST Rate"
+                                                                   value="{{companyprofile.CGST}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>SGST Rate@%</label> <input type="text"
+                                                                    class="form-control" name="SGST"
+                                                                    placeholder="Enter SGST Rate"
+                                                                    value="{{companyprofile.SGST}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>IGST Rate@%</label> <input type="text"
+                                                                  class="form-control" name="IGST"
+                                                                  placeholder="Enter IGST Rate"
+                                                                  value="{{companyprofile.IGST}}">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -113,24 +146,60 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Juridiction Text</label> <input type="text"
-                                                                               class="form-control" name="juridiction_text"
-                                                                               placeholder="Enter Juridiction Text"
-                                                                               value="{{companyprofile.juridiction_text}}">
+                                        <label>Bank Name</label> <input type="text"
+                                                                               class="form-control" name="bank_name"
+                                                                               placeholder="Enter Bank name"
+                                                                               value="{{companyprofile.bank_name}}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Account Number</label> <input type="text"
+                                                                           class="form-control" name="account_number"
+                                                                           placeholder="Enter Bank Account Number"
+                                                                           value="{{companyprofile.account_number}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>IFSC Code</label> <input type="text"
+                                                                            class="form-control" name="IFSC"
+                                                                            placeholder="Enter Branch Code"
+                                                                            value="{{companyprofile.IFSC}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Notes</label>
-                                        <textarea rows="5" class="form-control" name="note"
-                                                  placeholder="Enter Notes Here">{{companyprofile.note}}</textarea>
+                                        <label>Remarks</label> <input type="text"
+                                                                               class="form-control" name="remarks"
+                                                                               placeholder="Enter Remarks"
+                                                                               value="{{companyprofile.remarks}}">
                                     </div>
                                 </div>
                             </div>
-
-
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Terms And Conditions</label>
+                                        <textarea rows="5" class="form-control" name="terms"
+                                                  placeholder="Enter Terms And Conditions Here">{{companyprofile.term}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Authorise Representative</label> <input type="text"
+                                                                               class="form-control" name="authorise"
+                                                                               placeholder="Enter Authorise Representative"
+                                                                               value="{{companyprofile.authorise}}">
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-xs-3">
                                     <button type="submit"
