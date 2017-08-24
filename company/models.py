@@ -1,36 +1,25 @@
-from __future__ import unicode_literals
+from __future__ import unicode_literals, absolute_import
 
-from django.contrib.auth.models import User
 from django.db import models
 
+from common.base_model import HandyBase
+from customer.models import CustomerProfile, Address, Bank, Tax, Contact
 
-class CompanyProfile(models.Model):
-    customer = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class CompanyProfile(HandyBase):
+    customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, null=False, blank=False)
-    GST = models.CharField(max_length=50, null=False, blank=False)
-    PAN = models.CharField(max_length=50, null=False, blank=False)
-    CGST = models.CharField(max_length=50, null=False, blank=False)
-    SGST = models.CharField(max_length=50, null=False, blank=False)
-    IGST = models.CharField(max_length=50, null=False, blank=False)
-    address = models.TextField(default='', null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=50, null=True, blank=True)
-    zip = models.CharField(max_length=50, null=True, blank=True)
-    first_name = models.CharField(max_length=100, blank=True)
-    last_name = models.CharField(max_length=100, blank=True)
-    phone_number = models.CharField(max_length=50, blank=True)
-    email = models.EmailField(max_length=50, blank=True)
-    bank_name = models.CharField(max_length=200, blank=True)
-    account_number = models.CharField(max_length=50, blank=True)
-    IFSC = models.CharField(max_length=50, blank=True)
+    contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
+    gst = models.CharField(max_length=50, null=False, blank=False)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    bank_detail = models.ForeignKey(Bank, on_delete=models.CASCADE)
+    tax_detail = models.ForeignKey(Tax, on_delete=models.CASCADE)
     remarks = models.CharField(max_length=200, blank=True)
     terms = models.TextField(default='', null=True, blank=True)
-    authorise = models.CharField(max_length=200, blank=True)
-    created_date = models.DateField(auto_now_add=True)
-    updated_date = models.DateTimeField(auto_now=True)
+    authorised_signatory = models.CharField(max_length=200, blank=True)
 
     class Meta:
-        db_table = "bill_company_profile"
+        db_table = "gst_company_profile"
 
     def __unicode__(self):
         return self.name
