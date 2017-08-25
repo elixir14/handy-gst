@@ -1,0 +1,12 @@
+{% for field in form %}
+<div class="form-group">
+    <label class="col-sm-2">{% if field.field.required %}
+        <span class="required">*</span>
+        {% endif %} {{ field.label_tag }} </label>
+    <div class="col-lg-10"> {{ field }}
+        <span class="help-block">
+                {{ field.errors}}
+              </span>
+    </div>
+</div>
+{% endfor %}

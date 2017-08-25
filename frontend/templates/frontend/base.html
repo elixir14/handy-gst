@@ -52,7 +52,7 @@
         <ul class="nav navbar-right navbar-top-links">
             <li class="dropdown">
                 <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                    <i class="fa fa-user fa-fw"></i> Welcome {{user.username}} <b class="caret"></b>
+                    <i class="fa fa-user fa-fw"></i> Welcome {{user.first_name}} {{user.last_name}} <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu dropdown-user">
                     <li><a href="{% url 'frontend:customer:profile' %}"><i class="fa fa-user fa-fw"></i> User Profile</a>
@@ -97,7 +97,7 @@
                         <a href="#"><i class="fa fa-files-o fa-fw"></i>Clients<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
-                                <a href="{% url 'frontend:company:profile'%}">Add Client</a>
+                                <a href="{% url 'frontend:client:profile'%}">Add Client</a>
                             </li>
                             <li>
                                 <a href="{% url 'frontend:company:company_view'%}">View Clients</a>
@@ -105,7 +105,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Manage Licence</a>
+                        <a href="{% url 'frontend:bill:add_bill'%}"><i class="fa fa-edit fa-fw"></i>Bill</a>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>

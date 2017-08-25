@@ -7,7 +7,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">{{user.first_name}} {{user.last_name}}'s Profile</h1>
+                <h1 class="page-header">{{profile.contact.first_name}} {{profile.contact.last_name}}'s Profile</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
@@ -15,19 +15,47 @@
             <div class="col-lg-6">
                 <div class="panel panel-default">
                     <div class="panel-body">
-                        <form role="form" action="{% url 'frontend:customer:profile' id=user.id %}" method="post" enctype="multipart/form-data">
+                        <form role="form" action="{% url 'frontend:customer:profile' id=profile.id %}" method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label>First Name</label>
-                                <input class="form-control" name="first_name" value="{{user.first_name}}">
+                                <input class="form-control" name="first_name" value="{{profile.contact.first_name}}">
                             </div>
                             <div class="form-group">
                                 <label>Last Name</label>
-                                <input class="form-control" name="last_name" value="{{user.last_name}}">
+                                <input class="form-control" name="last_name" value="{{profile.contact.last_name}}">
                             </div>
                             <div class="form-group">
                                 <label>Email Addrress</label>
-                                <input class="form-control" name="email" value="{{user.email}}">
+                                <input class="form-control" name="email" value="{{profile.contact.email}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Phone Number</label>
+                                <input class="form-control" name="phone_number" value="{{profile.contact.phone_number}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Fax Number</label>
+                                <input class="form-control" name="fax_number" value="{{profile.contact.fax_number}}">
+                            </div>
+                            <div class="form-group">
+                                <label>Address</label>
+                                <input class="form-control" name="value" value="{{profile.address.value}}">
+                            </div>
+                            <div class="form-group">
+                                <label>City</label>
+                                <input class="form-control" name="city" value="{{profile.address.city}}">
+                            </div>
+                            <div class="form-group">
+                                <label>State</label>
+                                <select name="state" class="form-control">
+                                    {% for state in states %}
+                                    <option {% if state.id == profile.address.state.id %} selected {% endif %} value="{{state.id}}">{{state.name}}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Zip</label>
+                                <input class="form-control" name="zip" value="{{profile.address.zip}}">
                             </div>
                             <button type="submit" class="btn btn-default">Update Profile</button>
                         </form>

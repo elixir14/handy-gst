@@ -2,25 +2,25 @@ from __future__ import unicode_literals, absolute_import
 
 from django.contrib.auth.models import User
 from django.db import models
-from django.utils.translation import ugettext_lazy as _
 
 from common.base_model import HandyBase
+from .constants import CustomerStatus
 
 
 class State(models.Model):
-    state = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
     code = models.CharField(max_length=3, unique=True)
 
     class Meta:
         db_table = "gst_state"
 
     def __unicode__(self):
-        return self.state
+        return self.name
 
 
 # Create your models here.
 class Address(HandyBase):
-    address = models.TextField(default='', null=True, blank=True)
+    value = models.TextField(default='', null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     zip = models.CharField(max_length=50, null=True, blank=True)
     state = models.ForeignKey(State)
@@ -29,7 +29,7 @@ class Address(HandyBase):
         db_table = "gst_address"
 
     def __unicode__(self):
-        return self.address
+        return self.value
 
 
 class Bank(HandyBase):
@@ -73,6 +73,9 @@ class Contact(HandyBase):
 
 class CustomerProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    contact = models.OneToOneField(Contact, on_delete=models.CASCADE)
+    address = models.OneToOneField(Address, on_delete=models.CASCADE, null=True)
+    status = models.SmallIntegerField(choices=CustomerStatus.FieldStr.items(), default=CustomerStatus.Pending)
     created_date = models.DateField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

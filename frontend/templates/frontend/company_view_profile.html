@@ -16,7 +16,7 @@
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <div class="content table-responsive table-full-width">
-                            {% if companyprofile %}
+                            {% if profile %}
                             <table class="table table-hover table-striped">
                                 <thead>
                                 <th>Name</th>
@@ -42,28 +42,28 @@
                                 <th>Actions</th>
                                 </thead>
                                 <tbody>
-                                {% for company in companyprofile %}
+                                {% for company in profile %}
                                 <tr>
                                     <td>{{company.name}}</td>
-                                    <td>{{company.GST}}</td>
-                                    <td>{{company.PAN}}</td>
-                                    <td>{{company.CGST}}</td>
-                                    <td>{{company.SGST}}</td>
-                                    <td>{{company.IGST}}</td>
-                                    <td>{{company.address}}</td>
-                                    <td>{{company.city}}</td>
-                                    <td>{{company.state}}</td>
-                                    <td>{{company.zip}}</td>
-                                    <td>{{company.first_name}}</td>
-                                    <td>{{company.last_lame}}</td>
-                                    <td>{{company.phone_number}}</td>
-                                    <td>{{company.email}}</td>
-                                    <td>{{company.bank_name}}</td>
-                                    <td>{{company.account_number}}</td>
-                                    <td>{{company.IFSC}}</td>
+                                    <td>{{company.gst}}</td>
+                                    <td>{{company.tax_detail.pan}}</td>
+                                    <td>{{company.tax_detail.cgst}}</td>
+                                    <td>{{company.tax_detail.sgst}}</td>
+                                    <td>{{company.tax_detail.igst}}</td>
+                                    <td>{{company.address.value}}</td>
+                                    <td>{{company.address.city}}</td>
+                                    <td>{{company.address.state.name}}</td>
+                                    <td>{{company.address.zip}}</td>
+                                    <td>{{company.contact.first_name}}</td>
+                                    <td>{{company.contact.last_name}}</td>
+                                    <td>{{company.contact.phone_number}}</td>
+                                    <td>{{company.contact.email}}</td>
+                                    <td>{{company.bank_detail.name}}</td>
+                                    <td>{{company.bank_detail.account_number}}</td>
+                                    <td>{{company.bank_detail.ifsc}}</td>
                                     <td>{{company.remarks}}</td>
                                     <td>{{company.terms}}</td>
-                                    <td>{{company.authorise}}</td>
+                                    <td>{{company.authorised_signatory}}</td>
                                     <td><a href="{% url 'frontend:company:company_edit' id=company.id %}">Edit</a> <a
                                             href="{% url 'frontend:company:company_remove' id=company.id %}">Delete</a></td>
                                 </tr>

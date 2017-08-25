@@ -8,6 +8,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
 from customer.forms import SignUpForm
+from customer.models import CustomerProfile, Contact
 
 
 def login(request):
@@ -26,12 +27,19 @@ def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
+            instance = form.save()
+            contact = Contact.objects.create(first_name=instance.first_name,
+                                             last_name=instance.last_name,
+                                             email=instance.email)
+
+            profile = CustomerProfile.objects.create(
+                user=instance,
+                contact=contact)
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=raw_password)
             auth_login(request, user)
-            return HttpResponseRedirect("dashboard/")
+            return HttpResponseRedirect("customer/profile/")
     else:
         form = SignUpForm()
     return render(request, 'frontend/signup.html', {'form': form})

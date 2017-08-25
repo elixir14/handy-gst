@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'frontend',
     'customer',
     'company',
+    'client',
+    'bill',
 ]
 
 MIDDLEWARE = [

@@ -12,8 +12,8 @@ class ClientProfile(HandyBase):
     name = models.CharField(max_length=100, null=False, blank=False)
     gst = models.CharField(max_length=50, null=False, blank=False)
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
-    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE)
-    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE)
+    billing_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='billing_address')
+    shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='shipping_address')
     remarks = models.CharField(max_length=200, blank=True)
 
     class Meta:
