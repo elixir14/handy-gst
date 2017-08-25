@@ -6,4 +6,4 @@ handy-gst/local_settings.py
 */migrations/
 media/
 log/
-static/
+/static/
