@@ -14,12 +14,15 @@ from .models import CompanyProfile
 def company_profile(request):
     state = State.objects.all().order_by('name')
     if request.method == 'POST':
+
         company_form = CompanyProfileForm(request.POST or None)
         contact_form = EditContactForm(request.POST or None)
         address_form = EditAddressForm(request.POST or None)
         bank_form = EditBankForm(request.POST or None)
         tax_form = EditTaxForm(request.POST or None)
-        if request.POST and company_form.is_valid() and contact_form.is_valid() and address_form.is_valid() and bank_form.is_valid() and tax_form.is_valid():
+        if (request.POST and company_form.is_valid() and contact_form.is_valid() and
+                address_form.is_valid() and bank_form.is_valid() and tax_form.is_valid()):
+            print (request.user.id)
             contact_instance = contact_form.save()
             profile = company_form.save(commit=False)
             address_instance = address_form.save()
@@ -33,8 +36,8 @@ def company_profile(request):
             profile.save()
             return HttpResponseRedirect("/company/list/")
     else:
-        form = CompanyProfileForm()
-    return render(request, 'frontend/company_profile.html', {'form': form, 'states': state})
+        company_form = CompanyProfileForm()
+    return render(request, 'frontend/company_profile.html', {'form': company_form, 'states': state})
 
 
 @login_required

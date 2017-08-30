@@ -6,11 +6,13 @@ from common.base_model import HandyBase
 from company.models import CompanyProfile
 from customer.models import Address, Contact
 
+from customer.models import State
+
 
 class ClientProfile(HandyBase):
     company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE)
     name = models.CharField(max_length=100, null=False, blank=False)
-    gst = models.CharField(max_length=50, null=False, blank=False)
+    gst = models.CharField(max_length=50, null=True, blank=True)
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     billing_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='billing_address')
     shipping_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='shipping_address')

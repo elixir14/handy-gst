@@ -100,7 +100,7 @@
                                 <a href="{% url 'frontend:client:profile'%}">Add Client</a>
                             </li>
                             <li>
-                                <a href="{% url 'frontend:company:company_view'%}">View Clients</a>
+                                <a href="{% url 'frontend:client:client_view'%}">View Clients</a>
                             </li>
                         </ul>
                     </li>
@@ -145,6 +145,15 @@
 
 <!-- Custom Theme JavaScript -->
 <script src="{% static 'frontend/js/startmin.js' %}"></script>
+
+<script src="{% static 'frontend/formset/jquery.formset.js' %}"></script>
+<script type="text/javascript">
+        $('.formset_row').formset({
+            addText: 'Add Item',
+            deleteText: 'Delete',
+            prefix: 'item_set'
+        });
+</script>
 
 </body>
 
