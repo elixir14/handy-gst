@@ -15,22 +15,33 @@ class Invoice(models.Model):
     invoice_date = models.DateField(auto_now_add=True)
     recipient = models.CharField(max_length=100)
     consignee = models.CharField(max_length=100)
+
     bill_for = models.IntegerField(choices=ReportingPreference.FieldStr.items(), default=ReportingPreference.for_recipient)
     billing_address = models.TextField(default='')
     shipping_address = models.TextField(default='')
 
+    account_number = models.CharField(max_length=25, blank=True, null=True)
+    ifsc = models.CharField(max_length=15, blank=True, null=True)
+    pan = models.CharField(max_length=10, null=False, blank=False)
+
+    remarks = models.CharField(max_length=200, blank=True)
+    terms = models.TextField(default='', null=True, blank=True)
+    authorised_signatory = models.CharField(max_length=200, blank=True)
 
     def __unicode__(self):
-        return None
+        return self.invoice_no
 
 
 class Item(models.Model):
     invoice = models.ForeignKey(Invoice)
     description = models.CharField(max_length=100)
-    quantity = models.IntegerField()
-    rate = models.IntegerField()
-    value = models.IntegerField()
-    # discount = models.SmallIntegerField()
-    # total = models.FloatField()
+    hsn_code = models.CharField(max_length=10, null=True, blank=True)
+    quantity_code = models.CharField(max_length=10, null=True, blank=True)
+    quantity = models.FloatField(default=0.0)
+    rate = models.FloatField(default=0.0)
+    value = models.FloatField(default=0.0)
+    discount = models.FloatField(default=0.0)
+    total = models.FloatField(default=0.0)
 
-
+    def __unicode__(self):
+        return self.description

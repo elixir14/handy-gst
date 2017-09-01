@@ -6,8 +6,6 @@ from common.base_model import HandyBase
 from company.models import CompanyProfile
 from customer.models import Address, Contact
 
-from customer.models import State
-
 
 class ClientProfile(HandyBase):
     company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE)
@@ -20,6 +18,9 @@ class ClientProfile(HandyBase):
 
     class Meta:
         db_table = "gst_client_profile"
+
+    def client(self):
+        return self.company.name
 
     def __unicode__(self):
         return self.name

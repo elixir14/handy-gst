@@ -41,7 +41,7 @@ class Bank(HandyBase):
         db_table = "gst_bank"
 
     def __unicode__(self):
-        return self.address
+        return self.name
 
 
 class Tax(HandyBase):
@@ -54,7 +54,7 @@ class Tax(HandyBase):
         db_table = "gst_tax"
 
     def __unicode__(self):
-        return self.gst
+        return self.pan
 
 
 class Contact(HandyBase):

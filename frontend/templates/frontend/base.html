@@ -128,7 +128,6 @@
 
 </div>
 <!-- /#wrapper -->
-
 <!-- jQuery -->
 <script src="{% static 'frontend/js/jquery.min.js' %}"></script>
 
@@ -147,6 +146,7 @@
 <script src="{% static 'frontend/js/startmin.js' %}"></script>
 
 <script src="{% static 'frontend/formset/jquery.formset.js' %}"></script>
+
 <script type="text/javascript">
         $('.formset_row').formset({
             addText: 'Add Item',
@@ -154,6 +154,7 @@
             prefix: 'item_set'
         });
 </script>
+{% block javascript %}{% endblock %}
 
 </body>
 
