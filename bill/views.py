@@ -53,7 +53,6 @@ def company_detail(request):
 
 def client_detail(request):
     client_id = request.GET['client_id']
-    # print (client_id)
     client_object = ClientProfile.objects.get(pk=client_id)
 
     data = {

@@ -25,6 +25,8 @@
     <!-- Morris Charts CSS -->
     <link href="{% static 'frontend/css/morris.css' %}" rel="stylesheet">
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.css" rel="stylesheet">
+
     <!-- Custom Fonts -->
     <link href="{% static 'frontend/css/font-awesome.min.css' %}" rel="stylesheet" type="text/css">
 
@@ -83,7 +85,7 @@
                         <a href="{% url 'frontend:dashboard'%}" class="active"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i>Companies<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-building fa-fw"></i>Companies<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="{% url 'frontend:company:profile'%}">Add Company</a>
@@ -94,7 +96,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i>Clients<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-users fa-fw"></i>Clients<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="{% url 'frontend:client:profile'%}">Add Client</a>
@@ -116,7 +118,7 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>
+                        <a href="#"><i class="fa fa-table fa-fw"></i> Reports<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <li>
                                 <a href="blank.html">Daily Reports</a>
@@ -141,7 +143,7 @@
 
 <!-- Bootstrap Core JavaScript -->
 <script src="{% static 'frontend/js/bootstrap.min.js' %}"></script>
-
+<script src="{% static 'frontend/js/bootstrap-datepicker.js' %}"></script>
 <!-- Metis Menu Plugin JavaScript -->
 <script src="{% static 'frontend/js/metisMenu.min.js'%}"></script>
 
@@ -162,6 +164,7 @@
             prefix: 'item_set'
         });
 </script>
+
 {% block javascript %}{% endblock %}
 
 </body>

@@ -21,7 +21,7 @@ class InvoiceForm(ModelForm):
     gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTN/UIN')
     invoice_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
     invoice_date = forms.DateField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'YYYY-MM-DD'}))
+        widget=forms.TextInput(attrs={'class': 'form-control', 'style': 'width:33%'}))
 
     recipient = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True,
                                 label="Recipient Name")

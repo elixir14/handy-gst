@@ -19,45 +19,32 @@
                             {% if clients %}
                             <table class="table table-hover table-striped">
                                 <thead>
-                                    <th>Company</th>
+                                    <th>#</th>
                                     <th>Name</th>
                                     <th>GST Number</th>
-                                    <th>Billing Address</th>
-                                    <th>City</th>
-                                    <th>State</th>
-                                    <th>Zip</th>
-                                    <th>Shipping Address</th>
-                                    <th>City</th>
-                                    <th>State</th>
-                                    <th>Zip</th>
+                                    <th>Company</th>
                                     <th>First Name</th>
                                     <th>Last Name</th>
                                     <th>Phone Number</th>
                                     <th>Email Address</th>
-                                    <th>Remarks</th>
                                 </thead>
                                 <tbody>
                                 {% for client in clients %}
                                 <tr>
-                                    <td>{{client.company}}</td>
+                                    <td><a href="{% url 'frontend:client:client_edit' id=client.id %}">
+                                            <i class="fa fa-pencil-square-o fa-2" aria-hidden="true"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <a href="{% url 'frontend:client:client_remove' id=client.id %}">
+                                            <i class="fa fa-trash-o fa-2" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
                                     <td>{{client.name}}</td>
                                     <td>{{client.gst}}</td>
-                                    <td>{{client.billing_address.value}}</td>
-                                    <td>{{client.billing_address.city}}</td>
-                                    <td>{{client.billing_address.state.name}}</td>
-                                    <td>{{client.billing_address.zip}}</td>
-                                    <td>{{client.shipping_address.value}}</td>
-                                    <td>{{client.shipping_address.city}}</td>
-                                    <td>{{client.shipping_address.state.name}}</td>
-                                    <td>{{client.shipping_address.zip}}</td>
+                                    <td>{{client.company}}</td>
                                     <td>{{client.contact.first_name}}</td>
                                     <td>{{client.contact.last_name}}</td>
                                     <td>{{client.contact.phone_number}}</td>
                                     <td>{{client.contact.email}}</td>
-                                    <td>{{client.remarks}}</td>
-
-                                    <td><a href="#">Edit</a> <a
-                                            href="#">Delete</a></td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>

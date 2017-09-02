@@ -19,53 +19,34 @@
                             {% if profile %}
                             <table class="table table-hover table-striped">
                                 <thead>
-                                <th>Name</th>
-                                <th>GST Number</th>
-                                <th>PAN Number</th>
-                                <th>CGST Rate@%</th>
-                                <th>SGST Rate@%</th>
-                                <th>IGST Rate@%</th>
-                                <th>Address</th>
-                                <th>City</th>
-                                <th>State</th>
-                                <th>Zip</th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Phone Number</th>
-                                <th>Email Address</th>
-                                <th>Bank Name</th>
-                                <th>Account Number</th>
-                                <th>Branch Code</th>
-                                <th>Remarks</th>
-                                <th>Terms And Conditions</th>
-                                <th>Authorise Representative</th>
-                                <th>Actions</th>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>GST Number</th>
+                                    <th>PAN Number</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Phone Number</th>
+                                    <th>Email</th>
+
                                 </thead>
                                 <tbody>
                                 {% for company in profile %}
                                 <tr>
+                                    <td><a href="{% url 'frontend:company:company_edit' id=company.id %}">
+                                            <i class="fa fa-pencil-square-o fa-2" aria-hidden="true"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <a href="{% url 'frontend:company:company_remove' id=company.id %}">
+                                            <i class="fa fa-trash-o fa-2" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
                                     <td>{{company.name}}</td>
                                     <td>{{company.gst}}</td>
                                     <td>{{company.tax_detail.pan}}</td>
-                                    <td>{{company.tax_detail.cgst}}</td>
-                                    <td>{{company.tax_detail.sgst}}</td>
-                                    <td>{{company.tax_detail.igst}}</td>
-                                    <td>{{company.address.value}}</td>
-                                    <td>{{company.address.city}}</td>
-                                    <td>{{company.address.state.name}}</td>
-                                    <td>{{company.address.zip}}</td>
                                     <td>{{company.contact.first_name}}</td>
                                     <td>{{company.contact.last_name}}</td>
                                     <td>{{company.contact.phone_number}}</td>
                                     <td>{{company.contact.email}}</td>
-                                    <td>{{company.bank_detail.name}}</td>
-                                    <td>{{company.bank_detail.account_number}}</td>
-                                    <td>{{company.bank_detail.ifsc}}</td>
-                                    <td>{{company.remarks}}</td>
-                                    <td>{{company.terms}}</td>
-                                    <td>{{company.authorised_signatory}}</td>
-                                    <td><a href="{% url 'frontend:company:company_edit' id=company.id %}">Edit</a> <a
-                                            href="{% url 'frontend:company:company_remove' id=company.id %}">Delete</a></td>
+
                                 </tr>
                                 {% endfor %}
                                 </tbody>

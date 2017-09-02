@@ -4,6 +4,14 @@
 
 {% block javascript %}
 
+<script>
+  var date = new Date();
+    date.setDate(date.getDate()-1);
+    $('#id_invoice_date').datepicker({
+        autoclose: true,
+    });
+  </script>
+
 <script type="text/javascript">
 
     // To fill company details
