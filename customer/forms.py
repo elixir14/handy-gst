@@ -40,14 +40,14 @@ class EditContactForm(forms.ModelForm):
 
 
 class EditAddressForm(forms.ModelForm):
-    value = forms.Textarea()
+    address = forms.Textarea()
     city = forms.CharField(max_length=100, required=False, help_text='Optional.')
     zip = forms.CharField(max_length=50, required=False, help_text='Optional.')
     state = forms.ModelChoiceField(queryset=State.objects.all())
 
     class Meta:
         model = Address
-        fields = ('value', 'city', 'zip', 'state')
+        fields = ('address', 'city', 'zip', 'state')
 
 
 class EditBankForm(forms.ModelForm):

@@ -20,7 +20,7 @@ class State(models.Model):
 
 # Create your models here.
 class Address(HandyBase):
-    value = models.TextField(default='', null=True, blank=True)
+    address = models.TextField(default='', null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     zip = models.CharField(max_length=50, null=True, blank=True)
     state = models.ForeignKey(State)
@@ -29,7 +29,7 @@ class Address(HandyBase):
         db_table = "gst_address"
 
     def __unicode__(self):
-        return self.value
+        return self.address
 
 
 class Bank(HandyBase):

@@ -59,7 +59,7 @@ def client_detail(request):
         'results': {
                     'recipient': client_object.name,
                     "gst": client_object.gst,
-                    "billing_address": client_object.billing_address.value
+                    "billing_address": client_object.billing_address.address
         }
     }
     return JsonResponse(data)
