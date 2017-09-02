@@ -16,7 +16,7 @@ class Invoice(models.Model):
     recipient = models.CharField(max_length=100)
     consignee = models.CharField(max_length=100)
 
-    bill_for = models.IntegerField(choices=ReportingPreference.FieldStr.items(), default=ReportingPreference.for_recipient)
+    # bill_for = models.IntegerField(choices=ReportingPreference.FieldStr.items(), default=ReportingPreference.for_recipient)
     billing_address = models.TextField(default='')
     shipping_address = models.TextField(default='')
 

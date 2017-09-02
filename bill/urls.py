@@ -1,7 +1,6 @@
 from django.conf.urls import url
 
 from bill import views
-from django.urls import reverse
 urlpatterns = [
     url(r'^add/$', views.ItemCreate.as_view(success_url='bill_details'), name='add_bill'),
     url(r'^bill_details/$', views.InvoiceList.as_view(), name='bill-list'),

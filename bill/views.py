@@ -1,15 +1,7 @@
 from __future__ import unicode_literals, absolute_import
 
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-
 from company.models import CompanyProfile
 from client.models import ClientProfile
-from customer.models import CustomerProfile
-from .models import Invoice, Item
-from django.urls import reverse
-from django.forms.models import model_to_dict
-from django.core.urlresolvers import reverse_lazy
 from django.db import transaction
 from django.views.generic import CreateView, ListView
 from .forms import InvoiceForm, ItemFormSet
@@ -47,7 +39,6 @@ def company_detail(request):
 
     data = {
         'results': {
-            "gst": company_object.gst,
             "remarks": company_object.remarks,
             "terms": company_object.terms,
             "authorised_signatory": company_object.authorised_signatory,
@@ -68,6 +59,8 @@ def client_detail(request):
     data = {
         'results': {
                     'recipient': client_object.name,
+                    "gst": client_object.gst,
+                    "billing_address": client_object.billing_address.value
         }
     }
     return JsonResponse(data)

@@ -40,6 +40,8 @@ def signup(request):
             user = authenticate(username=username, password=raw_password)
             auth_login(request, user)
             return HttpResponseRedirect("customer/profile/")
+        else:
+            return render(request, 'frontend/signup.html', {'form': form, 'error_message': form.errors})
     else:
         form = SignUpForm()
     return render(request, 'frontend/signup.html', {'form': form})

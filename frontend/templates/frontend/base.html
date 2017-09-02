@@ -105,7 +105,15 @@
                         </ul>
                     </li>
                     <li>
-                        <a href="{% url 'frontend:bill:add_bill'%}"><i class="fa fa-edit fa-fw"></i>Bill</a>
+                        <a href="#"><i class="fa fa-files-o fa-fw"></i>Invoice<span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a href="{% url 'frontend:bill:add_bill'%}">Create Invoice</a>
+                            </li>
+                            <li>
+                                <a href="{% url 'frontend:bill:bill-list'%}">View Invoices</a>
+                            </li>
+                        </ul>
                     </li>
                     <li>
                         <a href="#"><i class="fa fa-files-o fa-fw"></i> Reports<span class="fa arrow"></span></a>

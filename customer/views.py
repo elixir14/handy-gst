@@ -29,9 +29,5 @@ def edit_customer_profile(request, id=None):
             profile.contact = contact_instance
             profile.address = address_instance
             profile.save()
-        else:
-            print contact_form.errors
-            print address_form.errors
-            print customer_form.errors
 
     return render(request, 'frontend/customer_profile.html', {'profile': profile, 'states': state})

@@ -46,9 +46,9 @@ class Bank(HandyBase):
 
 class Tax(HandyBase):
     pan = models.CharField(max_length=10, null=False, blank=False)
-    cgst = models.FloatField(default=0.00)
-    sgst = models.FloatField(default=0.00)
-    igst = models.FloatField(default=0.00)
+    cgst = models.FloatField(default=0.00, null=True)
+    sgst = models.FloatField(default=0.00, null=True)
+    igst = models.FloatField(default=0.00, null=True)
 
     class Meta:
         db_table = "gst_tax"

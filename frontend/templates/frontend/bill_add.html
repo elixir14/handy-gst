@@ -8,7 +8,7 @@
 
     // To fill company details
 
-    $("#id_brand_select").change(function () {
+    $("#id_company").change(function () {
         $company_id = $(this).val();
         $.ajax({
             url: 'company_detail/',
@@ -19,19 +19,20 @@
             success: function (data) {
               if (data.results) {
                // console.log(data.results);
-                $("#id_gst").attr("value", data.results.gst);
+
                 $("#id_account_number").attr("value", data.results.account_number);
                 $("#id_ifsc").attr("value", data.results.ifsc);
                 $("#id_pan").attr("value", data.results.pan);
                 $("#id_remarks").attr("value", data.results.remarks);
                 $("#id_terms").attr("value", data.results.terms);
                 $("#id_authorised_signatory").attr("value", data.results.authorised_signatory);
-                $("#id_car_select").empty();
+                $("#id_client").empty();
                 id_car_select = document.getElementById("id_car_select");
+                id_client.options.add(new Option('-- Select Client --',''))
                 for (index in data.results.clients) {
                         client = data.results.clients[index]
                        // alert(client.value);
-                        id_car_select.options.add(new Option(client.value,client.id))
+                        id_client.options.add(new Option(client.value,client.id))
                     }
               }
             }
@@ -40,7 +41,7 @@
 
     // To fill client details
 
-    $("#id_car_select").change(function () {
+    $("#id_client").change(function () {
         $client_id = $(this).val();
         $.ajax({
             url: 'client_detail/',
@@ -52,8 +53,8 @@
               if (data.results) {
                 console.log(data.results);
                 $("#id_recipient").attr("value", data.results.recipient);
-                $("#id_billing_address").attr("value", data.results.consignee);
-
+                $("#id_billing_address").attr("value", data.results.billing_address);
+                $("#id_gst").attr("value", data.results.gst);
               }
             }
         });
@@ -95,18 +96,18 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">Generate Bill</h1>
+                <h1 class="page-header">Generate Invoice</h1>
             </div>
             <!-- /.col-lg-12 -->
         </div>
         <div class="row">
-            <div class="col-lg-8">
+            <div class="col-lg-12">
                 <div class="panel panel-default">
                     <div class="panel-body">
                         <form method="post">
                             {% csrf_token %}
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-8">
                                     {{ form.as_p }}
                                 </div>
                             </div>

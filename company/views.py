@@ -13,6 +13,7 @@ from .models import CompanyProfile
 @login_required
 def company_profile(request):
     state = State.objects.all().order_by('name')
+    print request.POST
     if request.method == 'POST':
 
         company_form = CompanyProfileForm(request.POST or None)
@@ -20,6 +21,11 @@ def company_profile(request):
         address_form = EditAddressForm(request.POST or None)
         bank_form = EditBankForm(request.POST or None)
         tax_form = EditTaxForm(request.POST or None)
+        for item in [company_form, contact_form, address_form, bank_form, tax_form]:
+            if not item.is_valid():
+                print item.errors
+                return render(request, 'frontend/company_profile.html',
+                      {'form': company_form, 'states': state, 'error_message': item.errors})
         if (request.POST and company_form.is_valid() and contact_form.is_valid() and
                 address_form.is_valid() and bank_form.is_valid() and tax_form.is_valid()):
             print (request.user.id)

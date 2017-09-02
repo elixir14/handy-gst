@@ -30,7 +30,7 @@ class EditCustomerForm(forms.ModelForm):
 class EditContactForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
     last_name = forms.CharField(max_length=30, required=False, help_text='Optional.')
-    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
+    email = forms.EmailField(max_length=254, required=False, help_text='Optional.')
     phone_number = forms.CharField(max_length=50, required=False, help_text='Optional.')
     fax_number = forms.CharField(max_length=50, required=False, help_text='Optional.')
 
@@ -62,9 +62,9 @@ class EditBankForm(forms.ModelForm):
 
 class EditTaxForm(forms.ModelForm):
     pan = forms.CharField(max_length=10, required=False, help_text='Optional.')
-    cgst = forms.FloatField()
-    sgst = forms.FloatField()
-    igst = forms.FloatField()
+    cgst = forms.FloatField(required=False)
+    sgst = forms.FloatField(required=False)
+    igst = forms.FloatField(required=False)
 
     class Meta:
         model = Tax
