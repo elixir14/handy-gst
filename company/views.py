@@ -45,7 +45,7 @@ def company_profile(request):
 
 @login_required
 def company_view(request):
-    companies = CompanyProfile.objects.all()
+    companies = CompanyProfile.objects.filter(customer__user=request.user)
     data = {
         'profile': companies
     }
