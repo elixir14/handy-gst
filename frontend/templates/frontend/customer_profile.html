@@ -88,17 +88,3 @@
     <!-- /.container-fluid -->
 </div>
 {%endblock%}
-
-{% block javascript %}
-$.validator.addMethod('customphone', function (value, element) {
-    return this.optional(element) || /^(\+91-|\+91|0)?\d{10}$/.test(value);
-}, "Please enter a valid phone number");
-
-$(document).ready(function () {
-    $("#myform").validate({
-        rules: {
-            field1: 'customphone'
-        }
-    });
-});
-{% endblock %}
