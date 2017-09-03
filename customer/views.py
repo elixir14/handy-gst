@@ -22,6 +22,11 @@ def edit_customer_profile(request, id=None):
         customer_form = EditCustomerForm(request.POST or None, instance=profile)
         contact_form = EditContactForm(request.POST or None, instance=profile.contact)
         address_form = EditAddressForm(request.POST or None, instance=profile.address)
+        for item in [customer_form, contact_form, contact_form, address_form]:
+            if not item.is_valid():
+                return render(request, 'frontend/customer_profile.html',
+                              {'profile': profile, 'states': state,
+                               'error_message': item.errors})
         if request.POST and customer_form.is_valid() and contact_form.is_valid() and address_form.is_valid():
             contact_instance = contact_form.save()
             profile = customer_form.save(commit=False)
@@ -29,5 +34,7 @@ def edit_customer_profile(request, id=None):
             profile.contact = contact_instance
             profile.address = address_instance
             profile.save()
+            return render(request, 'frontend/customer_profile.html',
+                          {'profile': profile, 'states': state, 'message': 'Profile updated successfully.'})
 
-    return render(request, 'frontend/customer_profile.html', {'profile': profile, 'states': state})
+    return render(request, 'frontend/customer_profile.html', {'error_message': 'Failed to updated profile.'})
