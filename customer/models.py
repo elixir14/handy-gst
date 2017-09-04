@@ -2,7 +2,7 @@ from __future__ import unicode_literals, absolute_import
 
 from django.contrib.auth.models import User
 from django.db import models
-
+from django.core.validators import RegexValidator
 from common.base_model import HandyBase
 from .constants import CustomerStatus
 
@@ -60,8 +60,13 @@ class Tax(HandyBase):
 class Contact(HandyBase):
     first_name = models.CharField(max_length=100, blank=True, null=True)
     last_name = models.CharField(max_length=100, blank=True, null=True)
-    phone_number = models.CharField(max_length=50, blank=True, null=True)
-    fax_number = models.CharField(max_length=50, blank=True, null=True)
+    phone_regex = RegexValidator(regex=r'^\+?1?\d{9,15}$',
+                                 message="Phone number must be entered in the format: '+999999999'."
+                                         "Up to 15 digits allowed.")
+    phone_number = models.CharField(validators=[phone_regex], max_length=15, blank=True, null=True)
+    fax_number = RegexValidator(regex=r'^\d+$',
+                                message="Fax number must be entered in the number.")
+    fax_number = models.CharField(validators=[fax_number], max_length=50, blank=True, null=True)
     email = models.EmailField(max_length=50, blank=True, null=True)
 
     class Meta:

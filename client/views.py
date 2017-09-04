@@ -8,6 +8,7 @@ from .forms import ClientProfileForm
 from customer.models import State
 from client.models import ClientProfile
 
+
 @login_required
 def client_profile(request):
     companies = CompanyProfile.objects.all().order_by('name')
@@ -19,7 +20,7 @@ def client_profile(request):
         addresses = {"shipping": {}, "billing": {}}
         for type in addresses.keys():
             for item in ['address', 'city', 'state', 'zip']:
-                addresses[type][item] = request.POST[type+"_"+item]
+                addresses[type][item] = request.POST[type + "_" + item]
 
         billing_address_form = EditAddressForm(addresses['billing'] or None)
         shipping_address_form = EditAddressForm(addresses['shipping'] or None)
@@ -47,7 +48,7 @@ def update_client_profile(request, id):
     profile = get_object_or_404(ClientProfile, pk=id)
     if request.method == 'POST':
         # print request.POST
-        client_form = ClientProfileForm(request.POST or None,instance=profile)
+        client_form = ClientProfileForm(request.POST or None, instance=profile)
         contact_form = EditContactForm(request.POST or None, instance=profile.contact)
         addresses = {"shipping": {}, "billing": {}}
         for type in addresses.keys():
@@ -81,7 +82,7 @@ def update_client_profile(request, id):
 
 @login_required
 def client_view(request):
-    clients = ClientProfile.objects.filter(company__customer__user=request.user )
+    clients = ClientProfile.objects.filter(company__customer__user=request.user)
     data = {
         'clients': clients
     }
@@ -97,5 +98,3 @@ def client_remove(request, id):
         'clients': clients
     }
     return render(request, 'frontend/client_view_profile.html', context=data)
-
-
