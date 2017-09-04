@@ -11,7 +11,7 @@ from client.models import ClientProfile
 
 @login_required
 def client_profile(request):
-    companies = CompanyProfile.objects.all().order_by('name')
+    companies = CompanyProfile.objects.all().order_by('company_name')
     state = State.objects.all().order_by('name')
     if request.method == 'POST':
         # print request.POST
@@ -43,7 +43,7 @@ def client_profile(request):
 
 @login_required
 def update_client_profile(request, id):
-    companies = CompanyProfile.objects.all().order_by('name')
+    companies = CompanyProfile.objects.all().order_by('company_name')
     state = State.objects.all().order_by('name')
     profile = get_object_or_404(ClientProfile, pk=id)
     if request.method == 'POST':

@@ -51,13 +51,13 @@ class EditAddressForm(forms.ModelForm):
 
 
 class EditBankForm(forms.ModelForm):
-    name = forms.CharField(max_length=100, required=False, help_text='Optional.')
+    bank_name = forms.CharField(max_length=100, required=False, help_text='Optional.')
     account_number = forms.CharField(max_length=25, required=False, help_text='Optional.')
     ifsc = forms.CharField(max_length=15, required=False, help_text='Optional.')
 
     class Meta:
         model = Bank
-        fields = ('name', 'account_number', 'ifsc')
+        fields = ('bank_name', 'account_number', 'ifsc')
 
 
 class EditTaxForm(forms.ModelForm):

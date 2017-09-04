@@ -8,7 +8,7 @@ from customer.models import CustomerProfile, Address, Bank, Tax, Contact
 
 class CompanyProfile(HandyBase):
     customer = models.ForeignKey(CustomerProfile, on_delete=models.CASCADE)
-    name = models.CharField(max_length=100, null=False, blank=False)
+    company_name = models.CharField(max_length=100, null=False, blank=False)
     contact = models.ForeignKey(Contact, on_delete=models.CASCADE)
     gst = models.CharField(max_length=50, null=False, blank=False)
     address = models.ForeignKey(Address, on_delete=models.CASCADE)
@@ -22,4 +22,4 @@ class CompanyProfile(HandyBase):
         db_table = "gst_company_profile"
 
     def __unicode__(self):
-        return self.name
+        return self.company_name

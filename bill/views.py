@@ -32,7 +32,7 @@ def company_detail(request):
     clients = []
     client_object = ClientProfile.objects.filter(company_id=company_object.id)
     for client in client_object:
-        clients.append(dict(id=client.id, value=client.name))
+        clients.append(dict(id=client.id, value=client.client_name))
 
     bank_detail = Bank.objects.get(id=company_object.bank_detail_id)
     tax_detail = Tax.objects.get(id=company_object.tax_detail_id)
@@ -42,7 +42,7 @@ def company_detail(request):
             "remarks": company_object.remarks,
             "terms": company_object.terms,
             "authorised_signatory": company_object.authorised_signatory,
-            "account_number": bank_detail.name,
+            "account_number": bank_detail.bank_name,
             "ifsc": bank_detail.ifsc,
             "pan": tax_detail.pan,
             "clients": clients,
@@ -57,7 +57,7 @@ def client_detail(request):
 
     data = {
         'results': {
-                    'recipient': client_object.name,
+                    'recipient': client_object.client_name,
                     "gst": client_object.gst,
                     "billing_address": client_object.billing_address.address
         }

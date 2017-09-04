@@ -35,7 +35,7 @@
                                         <label name="company">Select Company</label>
                                         <select name="company" class="form-control">
                                             {% for company in companies %}
-                                                <option {% if company.id == profile.company.id %} selected {% endif %} value="{{company.id}}">{{company.name}}</option>
+                                                <option {% if company.id == profile.company.id %} selected {% endif %} value="{{company.id}}">{{company.company_name}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -43,9 +43,9 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Client Name</label> <input type="text"
-                                                                          class="form-control" name="name"
+                                                                          class="form-control" name="client_name"
                                                                           placeholder="Enter Client Name"
-                                                                          value="{{profile.name}}"/>
+                                                                          value="{{profile.client_name}}"/>
                                     </div>
                                 </div>
                             </div>

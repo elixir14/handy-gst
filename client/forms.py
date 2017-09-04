@@ -6,13 +6,13 @@ from company.models import CompanyProfile
 
 class ClientProfileForm(forms.ModelForm):
     company = forms.ModelChoiceField(queryset=CompanyProfile.objects.all())
-    name = forms.CharField(max_length=100, required=True, help_text='Required.')
+    client_name = forms.CharField(max_length=100, required=True, help_text='Required.')
     gst = forms.CharField(max_length=50, required=False, help_text='Required.')
     remarks = forms.CharField(max_length=200, required=False, help_text='Optional.')
 
     class Meta:
         model = ClientProfile
-        fields = ('company', 'name', 'gst','remarks')
+        fields = ('company', 'client_name', 'gst','remarks')
 
     def __unicode__(self):
-        return self.name
+        return self.client_name

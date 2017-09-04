@@ -33,7 +33,7 @@ class Address(HandyBase):
 
 
 class Bank(HandyBase):
-    name = models.CharField(max_length=100, blank=True, null=True)
+    bank_name = models.CharField(max_length=100, blank=True, null=True)
     account_number = models.CharField(max_length=25, blank=True, null=True)
     ifsc = models.CharField(max_length=15, blank=True, null=True)
 
@@ -41,7 +41,7 @@ class Bank(HandyBase):
         db_table = "gst_bank"
 
     def __unicode__(self):
-        return self.name
+        return self.bank_name
 
 
 class Tax(HandyBase):

@@ -11,12 +11,13 @@ from client.models import ClientProfile
 
 
 class InvoiceForm(ModelForm):
-
-    company = forms.ChoiceField(choices=([('', '-- Select Company --')]+
-                                              [(company.id, "%s (%s)" % (company.name, company.gst)) for company in CompanyProfile.objects.all()]),
-                                     widget=forms.Select(attrs={"class": "form-control"}), label="Select Company")
-    client = forms.ChoiceField(choices=([('', '-- Select Client --')]), widget=forms.Select(attrs={"class": "form-control"}),
-                                   label="Select Client")
+    company = forms.ChoiceField(choices=([('', '-- Select Company --')] +
+                                         [(company.id, "%s (%s)" % (company.company_name, company.gst)) for company in
+                                          CompanyProfile.objects.all()]),
+                                widget=forms.Select(attrs={"class": "form-control"}), label="Select Company")
+    client = forms.ChoiceField(choices=([('', '-- Select Client --')]),
+                               widget=forms.Select(attrs={"class": "form-control"}),
+                               label="Select Client")
 
     gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTN/UIN')
     invoice_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
@@ -55,19 +56,26 @@ class InvoiceForm(ModelForm):
         model = Invoice
         exclude = ()
         fields = ('company', 'client', 'invoice_no', 'gst', 'recipient', 'billing_address',
-                  'bill_state','bill_state_code', 'consignee','shipping_address', 'shipping_state',
-                  'shipping_state_code','remarks', 'terms', 'authorised_signatory', 'account_number', 'ifsc', 'pan' )
+                  'bill_state', 'bill_state_code', 'consignee', 'shipping_address', 'shipping_state',
+                  'shipping_state_code', 'remarks', 'terms', 'authorised_signatory', 'account_number', 'ifsc', 'pan')
 
 
 class ItemForm(ModelForm):
-    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', "style": "width:250px"}), required=True)
-    hsn_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control '}),label="HSN/ACS", required=False)
-    quantity_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control' } ), required=False)
-    quantity = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control col-xs-2', 'onKeyup' : "Test();"}), required=True)
-    rate = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup' : "Test();"}), required=True)
-    value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly' : 'True'}), required=False)
-    discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup' : "Test();"}))
-    tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}), required=False)
+    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', "style": "width:250px"}),
+                                  required=True)
+    hsn_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control '}), label="HSN/ACS",
+                               required=False)
+    quantity_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    quantity = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control col-xs-2', 'onKeyup': "Test();"}),
+                                required=True)
+    rate = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup': "Test();"}),
+                            required=True)
+    value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
+                             required=False)
+    discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup': "Test();"}))
+    tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
+                                 required=False)
+
     class Meta:
         model = Item
         exclude = ()
