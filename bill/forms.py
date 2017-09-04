@@ -12,14 +12,14 @@ from client.models import ClientProfile
 
 class InvoiceForm(ModelForm):
     company = forms.ChoiceField(choices=([('', '-- Select Company --')] +
-                                         [(company.id, "%s (%s)" % (company.name, company.gst)) for company in
+                                         [(company.id, "%s (%s)" % (company.company_name, company.gst)) for company in
                                           CompanyProfile.objects.all()]),
                                 widget=forms.Select(attrs={"class": "form-control"}), label="Select Company")
     client = forms.ChoiceField(choices=([('', '-- Select Client --')]),
                                widget=forms.Select(attrs={"class": "form-control"}),
                                label="Select Client")
 
-    gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTN/UIN')
+    client_gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTN/UIN')
     invoice_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
     invoice_date = forms.DateField(
         widget=forms.TextInput(attrs={'class': 'form-control', 'style': 'width:50%'}))
@@ -33,8 +33,8 @@ class InvoiceForm(ModelForm):
     billing_address = forms.CharField(
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Billing Address")
 
-    bill_state = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State")
-    bill_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State Code")
+    billing_state = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State")
+    billing_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State Code")
 
     shipping_address = forms.CharField(
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Shipping Address")
@@ -63,8 +63,8 @@ class InvoiceForm(ModelForm):
     class Meta:
         model = Invoice
         exclude = ()
-        fields = ('company', 'client', 'invoice_no', 'gst', 'recipient', 'billing_address',
-                  'bill_state', 'bill_state_code', 'consignee', 'shipping_address', 'shipping_state',
+        fields = ('company', 'client', 'invoice_no', 'client_gst', 'recipient', 'billing_address',
+                  'billing_state', 'billing_state_code', 'consignee', 'shipping_address', 'shipping_state',
                   'shipping_state_code', 'remarks', 'terms', 'authorised_signatory', 'account_number', 'ifsc', 'pan',
                   'cgst', 'sgst', 'igst', 'total')
 
@@ -87,10 +87,10 @@ class ItemForm(ModelForm):
                                  required=False)
 
 
-class Meta:
-    model = Item
-    exclude = ()
-    fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount')
+    class Meta:
+        model = Item
+        exclude = ()
+        fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount')
 
 
 ItemFormSet = inlineformset_factory(Invoice, Item, form=ItemForm, extra=1)

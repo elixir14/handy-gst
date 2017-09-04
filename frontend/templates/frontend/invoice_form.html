@@ -62,10 +62,16 @@
             dataType: 'json',
             success: function (data) {
               if (data.results) {
-                console.log(data.results);
+                // console.log(data.results);
                 $("#id_recipient").attr("value", data.results.recipient);
                 $("#id_billing_address").val(data.results.billing_address);
-                $("#id_gst").attr("value", data.results.gst);
+                $("#id_client_gst").attr("value", data.results.gst);
+                $("#id_billing_address").val(data.results.billing_address);
+                $("#id_billing_state").attr("value", data.results.billing_state);
+                $("#id_billing_state_code").attr("value", data.results.billing_state_code);
+                $("#id_shipping_address").val(data.results.shipping_address);
+                $("#id_shipping_state").attr("value", data.results.shipping_state);
+                $("#id_shipping_state_code").attr("value", data.results.shipping_state_code);
               }
             }
         });

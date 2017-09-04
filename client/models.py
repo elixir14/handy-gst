@@ -19,8 +19,5 @@ class ClientProfile(HandyBase):
     class Meta:
         db_table = "gst_client_profile"
 
-    def client(self):
-        return self.company.company_name
-
     def __unicode__(self):
         return self.client_name

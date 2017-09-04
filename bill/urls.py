@@ -8,5 +8,5 @@ urlpatterns = [
     url(r'^add/company_detail/$', views.company_detail, name='company_detail'),
     url(r'^add/client_detail/$', views.client_detail, name='client_detail'),
     url(r'edit/(?P<pk>[0-9]+)/$', views.ItemUpdate.as_view(), name='bill_list'),
-    # url(r'delete/(?P<pk>[0-9]+)/delete/$', views.ProfileDelete.as_view(), name='profile-delete'),
+    url(r'^delete/(?P<id>[0-9]+)/$', views.bill_delete, name='bill_list'),
 ]

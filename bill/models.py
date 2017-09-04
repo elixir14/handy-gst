@@ -1,27 +1,27 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
-from customer.models import Address
 from company.models import CompanyProfile
 from client.models import ClientProfile
-
-from constants import ReportingPreference
+from customer.models import State
 
 
 class Invoice(models.Model):
-    # company = models.IntegerField(choices=[(company.id, company.name) for company in CompanyProfile.objects.all()])
-    # client = models.IntegerField(choices=[(client.id, client.name) for client in ClientProfile.objects.all()])
-    gst = models.CharField(max_length=50, null=False, blank=False)
+    company = models.IntegerField()# models.ForeignKey(CompanyProfile)
+    client = models.IntegerField() # models.ForeignKey(ClientProfile)
+    client_gst = models.CharField(max_length=50, null=False, blank=False)
     invoice_no = models.CharField(max_length=100)
     invoice_date = models.DateField(auto_now_add=True)
     recipient = models.CharField(max_length=100)
     consignee = models.CharField(max_length=100)
 
-    # bill_for = models.IntegerField(choices=ReportingPreference.FieldStr.items(),
-    #                                default=ReportingPreference.for_recipient)
     billing_address = models.TextField(default='')
+    billing_state = models.CharField(max_length=50)
+    billing_state_code = models.CharField(max_length=3, unique=True)
+
     shipping_address = models.TextField(default='')
+    shipping_state = models.CharField(max_length=50)
+    shipping_state_code = models.CharField(max_length=3, unique=True)
 
     account_number = models.CharField(max_length=25, blank=True, null=True)
     ifsc = models.CharField(max_length=15, blank=True, null=True)
@@ -34,6 +34,9 @@ class Invoice(models.Model):
     terms = models.TextField(default='', null=True, blank=True)
     authorised_signatory = models.CharField(max_length=200, blank=True)
     total = models.FloatField(default=0.0)
+
+    class Meta:
+        db_table = "gst_invoice"
 
     def __unicode__(self):
         return self.invoice_no
@@ -51,3 +54,6 @@ class Item(models.Model):
 
     def __unicode__(self):
         return self.description
+
+    class Meta:
+        db_table = "gst_invoice_item"

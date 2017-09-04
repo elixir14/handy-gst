@@ -3,10 +3,11 @@ from __future__ import unicode_literals, absolute_import
 from company.models import CompanyProfile
 from client.models import ClientProfile
 from django.db import transaction
-from django.views.generic import CreateView, ListView, UpdateView
+from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic.edit import ModelFormMixin
 from .forms import InvoiceForm, ItemFormSet
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from customer.models import Bank, Tax, Address
+from customer.models import Bank, Tax, Address, State
 from .models import Invoice
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
@@ -50,7 +51,7 @@ def company_detail(request):
             "clients": clients,
             "cgst": tax_detail.cgst,
             "sgst": tax_detail.sgst,
-            "igst": tax_detail.igst,
+            "igst": tax_detail.igst
         }
     }
     return JsonResponse(data)
@@ -61,13 +62,22 @@ def client_detail(request):
     client_object = ClientProfile.objects.get(pk=client_id)
     # print(client_object.__dict__)
 
-    # address_object = Address.objects.get(pk=client_object.billing_address_id)
+    billing_address_object = Address.objects.get(pk=client_object.billing_address_id)
+    shipping_address_object = Address.objects.get(pk=client_object.shipping_address_id)
 
+    billing_state_object = State.objects.get(pk=billing_address_object.state_id)
+    shipping_state_object = State.objects.get(pk=shipping_address_object.state_id)
 
     data = {
         'results': {
                     'recipient': client_object.client_name,
                     "gst": client_object.gst,
+                    "billing_address": billing_address_object.address,
+                    "billing_state": billing_state_object.name,
+                    "billing_state_code": billing_state_object.code,
+                    "shipping_address": shipping_address_object.address,
+                    "shipping_state": shipping_state_object.name,
+                    "shipping_state_code": shipping_state_object.code,
         }
     }
     return JsonResponse(data)
@@ -85,8 +95,14 @@ class InvoiceList(ListView):
     model = Invoice
 
 
+class InvoiceCreate(CreateView):
+    model = Invoice
+    fields = "__all__"
+
+
 class ItemCreate(CreateView):
     form_class = InvoiceForm
+    model = Invoice
     template_name = 'frontend/invoice_form.html'
     # success_url = reverse_lazy("bill_list")
 
@@ -97,7 +113,10 @@ class ItemCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         data = super(ItemCreate, self).get_context_data(**kwargs)
+        print (data)
+        print ("-------------------")
         print (self.request.POST)
+        print ("+++++++++++++++++++")
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST)
         else:
@@ -105,9 +124,11 @@ class ItemCreate(CreateView):
         return data
 
     def form_valid(self, form):
+        print ("-------------------dhdhdhdhhd")
         print (self.request.POST)
         context = self.get_context_data()
         items = context['items']
+        print (items)
         with transaction.atomic():
             self.object = form.save()
             if items.is_valid():
@@ -119,13 +140,10 @@ class ItemCreate(CreateView):
                 print ("-------Error-----")
         return super(ItemCreate, self).form_valid(form)
 
-        # def get_success_url(self):
-        #     return reverse('add_bill')
-
 
 class ItemUpdate(UpdateView):
     model = Invoice
-    fields = "__all__"
+    form_class = InvoiceForm
     template_name = "frontend/invoice_form.html"
     success_url = reverse_lazy('bill_list')
 
@@ -151,5 +169,13 @@ class ItemUpdate(UpdateView):
                 items.instance = self.object
                 items.save()
             else:
-                print "error"
+                print ("Error in saving form.")
         return super(ItemUpdate, self).form_valid(form)
+
+
+def bill_delete(request, id=None):
+    if id:
+        invoice = Invoice.objects.get(pk=id)
+        invoice.delete()
+        invoices = Invoice.objects.all()
+    return render(request, "frontend/invoice_list.html", {'clients': invoices})
