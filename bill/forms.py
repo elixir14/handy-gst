@@ -12,7 +12,7 @@ from client.models import ClientProfile
 
 class InvoiceForm(ModelForm):
     company = forms.ChoiceField(choices=([('', '-- Select Company --')] +
-                                         [(company.id, "%s (%s)" % (company.name, company.gst)) for company in
+                                         [(company.id, "%s (%s)" % (company.company_name, company.gst)) for company in
                                           CompanyProfile.objects.all()]),
                                 widget=forms.Select(attrs={"class": "form-control"}), label="Select Company")
     client = forms.ChoiceField(choices=([('', '-- Select Client --')]),
@@ -86,11 +86,9 @@ class ItemForm(ModelForm):
     tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
                                  required=False)
 
-
-class Meta:
-    model = Item
-    exclude = ()
-    fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount')
-
+    class Meta:
+        model = Item
+        exclude = ()
+        fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount')
 
 ItemFormSet = inlineformset_factory(Invoice, Item, form=ItemForm, extra=1)
