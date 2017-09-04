@@ -10,23 +10,30 @@ from constants import ReportingPreference
 
 
 class Invoice(models.Model):
+    # company = models.IntegerField(choices=[(company.id, company.name) for company in CompanyProfile.objects.all()])
+    # client = models.IntegerField(choices=[(client.id, client.name) for client in ClientProfile.objects.all()])
     gst = models.CharField(max_length=50, null=False, blank=False)
     invoice_no = models.CharField(max_length=100)
     invoice_date = models.DateField(auto_now_add=True)
     recipient = models.CharField(max_length=100)
     consignee = models.CharField(max_length=100)
 
-    # bill_for = models.IntegerField(choices=ReportingPreference.FieldStr.items(), default=ReportingPreference.for_recipient)
+    # bill_for = models.IntegerField(choices=ReportingPreference.FieldStr.items(),
+    #                                default=ReportingPreference.for_recipient)
     billing_address = models.TextField(default='')
     shipping_address = models.TextField(default='')
 
     account_number = models.CharField(max_length=25, blank=True, null=True)
     ifsc = models.CharField(max_length=15, blank=True, null=True)
     pan = models.CharField(max_length=10, null=False, blank=False)
+    cgst = models.FloatField(default=0.00, null=True)
+    sgst = models.FloatField(default=0.00, null=True)
+    igst = models.FloatField(default=0.00, null=True)
 
     remarks = models.CharField(max_length=200, blank=True)
     terms = models.TextField(default='', null=True, blank=True)
     authorised_signatory = models.CharField(max_length=200, blank=True)
+    total = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return self.invoice_no
@@ -41,7 +48,6 @@ class Item(models.Model):
     rate = models.FloatField(default=0.0)
     value = models.FloatField(default=0.0)
     discount = models.FloatField(default=0.0)
-    total = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return self.description

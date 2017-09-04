@@ -7,11 +7,13 @@ from .models import CompanyProfile
 from .forms import ClientProfileForm
 from customer.models import State
 from client.models import ClientProfile
+from django.contrib import messages
+
 
 
 @login_required
 def client_profile(request):
-    companies = CompanyProfile.objects.all().order_by('name')
+    companies = CompanyProfile.objects.filter(customer__user=request.user)
     state = State.objects.all().order_by('name')
     if request.method == 'POST':
         # print request.POST
@@ -24,6 +26,12 @@ def client_profile(request):
 
         billing_address_form = EditAddressForm(addresses['billing'] or None)
         shipping_address_form = EditAddressForm(addresses['shipping'] or None)
+
+        for item in [client_form, contact_form, billing_address_form, shipping_address_form]:
+            if not item.is_valid():
+                print item.errors
+                return render(request, 'frontend/client_profile.html',
+                              {'form': client_form, 'states': state, 'error_message': item.errors})
         if (request.POST and client_form.is_valid() and contact_form.is_valid() and
                 shipping_address_form.is_valid() and billing_address_form.is_valid()):
             contact_instance = contact_form.save()
@@ -43,7 +51,7 @@ def client_profile(request):
 
 @login_required
 def update_client_profile(request, id):
-    companies = CompanyProfile.objects.all().order_by('name')
+    companies = CompanyProfile.objects.filter(customer__user=request.user)
     state = State.objects.all().order_by('name')
     profile = get_object_or_404(ClientProfile, pk=id)
     if request.method == 'POST':

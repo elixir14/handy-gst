@@ -3,11 +3,13 @@ from __future__ import unicode_literals, absolute_import
 from company.models import CompanyProfile
 from client.models import ClientProfile
 from django.db import transaction
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView, UpdateView
 from .forms import InvoiceForm, ItemFormSet
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from customer.models import Bank, Tax
+from customer.models import Bank, Tax, Address
 from .models import Invoice
+from django.shortcuts import render, get_object_or_404
+from django.core.urlresolvers import reverse_lazy
 
 
 # @login_required
@@ -46,6 +48,9 @@ def company_detail(request):
             "ifsc": bank_detail.ifsc,
             "pan": tax_detail.pan,
             "clients": clients,
+            "cgst": tax_detail.cgst,
+            "sgst": tax_detail.sgst,
+            "igst": tax_detail.igst,
         }
     }
     return JsonResponse(data)
@@ -54,19 +59,27 @@ def company_detail(request):
 def client_detail(request):
     client_id = request.GET['client_id']
     client_object = ClientProfile.objects.get(pk=client_id)
+    # print(client_object.__dict__)
+
+    # address_object = Address.objects.get(pk=client_object.billing_address_id)
+
 
     data = {
         'results': {
-                    'recipient': client_object.name,
+                    "recipient": client_object.name,
                     "gst": client_object.gst,
-                    "billing_address": client_object.billing_address.address
+                    "billing_address": 'Palanpur'#address_object.value
         }
     }
     return JsonResponse(data)
 
 
-# def bill_list(request):
-#     return HttpResponse('hello')
+def bill_list(request, id=None):
+    if id:
+        invoice = Invoice.objects.get(pk=id)
+    else:
+        invoice = Invoice.objects.all()
+    return render(request, "frontend/invoice_list.html", {'clients': invoice})
 
 
 class InvoiceList(ListView):
@@ -75,11 +88,17 @@ class InvoiceList(ListView):
 
 class ItemCreate(CreateView):
     form_class = InvoiceForm
-    template_name = 'frontend/bill_add.html'
+    template_name = 'frontend/invoice_form.html'
     # success_url = reverse_lazy("bill_list")
+
+    def __init__(self, **kwargs):
+        super(ItemCreate, self).__init__(**kwargs)
+        self.request = None
+        self.object = None
 
     def get_context_data(self, **kwargs):
         data = super(ItemCreate, self).get_context_data(**kwargs)
+        print (self.request.POST)
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST)
         else:
@@ -97,7 +116,41 @@ class ItemCreate(CreateView):
                 items.instance = self.object
                 items.save()
                 print ("save done")
+            else:
+                print ("-------Error-----")
         return super(ItemCreate, self).form_valid(form)
 
         # def get_success_url(self):
         #     return reverse('add_bill')
+
+
+class ItemUpdate(UpdateView):
+    model = Invoice
+    fields = "__all__"
+    template_name = "frontend/invoice_form.html"
+    success_url = reverse_lazy('bill_list')
+
+    def __init__(self, **kwargs):
+        super(ItemUpdate, self).__init__(**kwargs)
+        self.request = None
+        self.object = None
+
+    def get_context_data(self, **kwargs):
+        data = super(ItemUpdate, self).get_context_data(**kwargs)
+        if self.request.POST:
+            data['items'] = ItemFormSet(self.request.POST, instance=self.object)
+        else:
+            data['items'] = ItemFormSet(instance=self.object)
+        return data
+
+    def form_valid(self, form):
+        context = self.get_context_data()
+        items = context['items']
+        with transaction.atomic():
+            self.object = form.save()
+            if items.is_valid():
+                items.instance = self.object
+                items.save()
+            else:
+                print "error"
+        return super(ItemUpdate, self).form_valid(form)

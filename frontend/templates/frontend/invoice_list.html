@@ -22,13 +22,14 @@
                                     <th>#</th>
                                     <th>Invoice No.</th>
                                     <th>Invoice Date</th>
+                                    <th>Customer</th>
                                     <th>Client</th>
                                     <th>Amount Paid</th>
                                 </thead>
                                 <tbody>
                                 {% for client in clients %}
                                 <tr>
-                                    <td><a href="#">
+                                    <td><a href="{% url 'frontend:bill:bill_list' pk=client.id %}">
                                             <i class="fa fa-pencil-square-o fa-2" aria-hidden="true"></i>
                                         </a>&nbsp;&nbsp;&nbsp;
                                         <a href="#">

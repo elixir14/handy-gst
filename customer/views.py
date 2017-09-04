@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404
 
 from customer.models import CustomerProfile, State
 from .forms import EditCustomerForm, EditContactForm, EditAddressForm
+from django.contrib import messages
 
 
 @login_required
@@ -34,7 +35,7 @@ def edit_customer_profile(request, id=None):
             profile.contact = contact_instance
             profile.address = address_instance
             profile.save()
+            messages.success(request, 'Profile updated successfully.')
             return render(request, 'frontend/customer_profile.html',
                           {'profile': profile, 'states': state, 'message': 'Profile updated successfully.'})
-
     return render(request, 'frontend/customer_profile.html', {'error_message': 'Failed to updated profile.'})
