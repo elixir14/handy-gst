@@ -67,6 +67,7 @@ def company_remove(request, id):
 def company_edit(request, id=None):
     state = State.objects.all().order_by('name')
     profile = get_object_or_404(CompanyProfile, pk=id)
+    print profile.__dict__
     if request.method == 'POST':
         company_form = CompanyProfileForm(request.POST or None, instance=profile)
         contact_form = EditContactForm(request.POST or None, instance=profile.contact)
@@ -75,10 +76,10 @@ def company_edit(request, id=None):
         tax_form = EditTaxForm(request.POST or None, instance=profile.tax_detail)
         if request.POST and company_form.is_valid() and contact_form.is_valid() and address_form.is_valid() and bank_form.is_valid() and tax_form.is_valid():
             contact_instance = contact_form.save()
-            profile = company_form.save(commit=False)
             address_instance = address_form.save()
             bank_instance = bank_form.save()
             tax_instance = tax_form.save()
+            profile = company_form.save(commit=False)
             profile.contact = contact_instance
             profile.address = address_instance
             profile.bank_detail = bank_instance

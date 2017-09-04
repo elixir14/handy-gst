@@ -34,6 +34,9 @@
                 $("#id_remarks").attr("value", data.results.remarks);
                 $("#id_terms").attr("value", data.results.terms);
                 $("#id_authorised_signatory").attr("value", data.results.authorised_signatory);
+                $("#id_cgst").attr("value", data.results.cgst);
+                $("#id_sgst").attr("value", data.results.sgst);
+                $("#id_igst").attr("value", data.results.igst);
                 $("#id_client").empty();
                 id_car_select = document.getElementById("id_car_select");
                 id_client.options.add(new Option('-- Select Client --',''))
@@ -61,7 +64,7 @@
               if (data.results) {
                 console.log(data.results);
                 $("#id_recipient").attr("value", data.results.recipient);
-                $("#id_billing_address").attr("value", data.results.billing_address);
+                $("#id_billing_address").val(data.results.billing_address);
                 $("#id_gst").attr("value", data.results.gst);
               }
             }
@@ -91,10 +94,12 @@
             {
                 taxable_value = value*(100-discount)/100;
             }
-            $("#id_item_set-" + i + "-quantity_code").val(taxable_value);
+            $("#id_item_set-" + i + "-tax_value").val(taxable_value);
             total = total + taxable_value;
         }
-        $("#id_item_set-0-hsn_code").val(total);
+      //  $("#id_item_set-" + 0 + "-hsn_code").val(total);
+        $("#id_total").val(total);
+
      }
 </script>
 {% endblock %}
@@ -114,11 +119,19 @@
                     <div class="panel-body">
                         <form method="post">
                             {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-8">
-                                    {{ form.as_p }}
+                            {{ form.non_field_errors }}
+
+                            {% for field in form %}
+                                <div class="form-group">
+                                      <label class="col-sm-3"> {{ field.label_tag }} </label>
+                                      <div class="col-lg-3"> {{ field }}
+                                              <span class="help-block">
+                                                {{ field.errors}}
+                                              </span>
+                                      </div>
                                 </div>
-                            </div>
+                                {% endfor %}
+
                             <div class="row">
                                 <div class="col-md-12">
                                 <table class="table">
