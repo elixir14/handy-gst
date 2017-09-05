@@ -11,9 +11,7 @@ from client.models import ClientProfile
 
 
 class InvoiceForm(ModelForm):
-    company = forms.ChoiceField(choices=([('', '-- Select Company --')] +
-                                         [(company.id, "%s (%s)" % (company.company_name, company.gst)) for company in
-                                          CompanyProfile.objects.all()]),
+    company = forms.ChoiceField(choices=([('', '-- Select Company --')]),
                                 widget=forms.Select(attrs={"class": "form-control"}), label="Select Company")
     client = forms.ChoiceField(choices=([('', '-- Select Client --')]),
                                widget=forms.Select(attrs={"class": "form-control"}),
@@ -28,8 +26,6 @@ class InvoiceForm(ModelForm):
                                 label="Recipient Name")
     consignee = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True,
                                 label="Consignee Name")
-    # bill_for = forms.ChoiceField(choices=ReportingPreference.FieldStr.items(),
-    #                              widget=forms.Select(attrs={"class": "form-control"}), label="Bill Preference")
     billing_address = forms.CharField(
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Billing Address")
 
