@@ -86,11 +86,9 @@ class ItemForm(ModelForm):
     tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
                                  required=False)
 
-
     class Meta:
         model = Item
         exclude = ()
         fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount')
-
 
 ItemFormSet = inlineformset_factory(Invoice, Item, form=ItemForm, extra=1)
