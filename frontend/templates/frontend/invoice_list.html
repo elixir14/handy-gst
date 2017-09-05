@@ -29,11 +29,14 @@
                                 <tbody>
                                 {% for client in clients %}
                                 <tr>
-                                    <td><a href="{% url 'frontend:bill:bill_list' pk=client.id %}">
+                                    <td><a href="{% url 'frontend:bill:bill_list' id=client.id %}">
                                             <i class="fa fa-pencil-square-o fa-2" aria-hidden="true"></i>
                                         </a>&nbsp;&nbsp;&nbsp;
-                                        <a href="#">
+                                        <a href="{% url 'frontend:bill:bill_delete' id=client.id %}">
                                             <i class="fa fa-trash-o fa-2" aria-hidden="true"></i>
+                                        </a>&nbsp;&nbsp;&nbsp;
+                                        <a href="{% url 'frontend:bill:generate_pdf' id=client.id %}" target="_blank">
+                                            <i class="fa fa-download" aria-hidden="true"></i>
                                         </a>
                                     </td>
                                     <td>{{client.invoice_no}}</td>
@@ -47,7 +50,7 @@
                                 </tbody>
                             </table>
                             {% else %}
-                            <p>No Client in the database</p>
+                            <p>No Invoice in the database</p>
                             {% endif %}
                         </div>
 

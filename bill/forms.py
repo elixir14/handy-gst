@@ -5,10 +5,10 @@ from .models import Invoice, Item
 from django.forms import inlineformset_factory, ModelForm
 from django import forms
 
-from .constants import ReportingPreference
 from company.models import CompanyProfile
 from client.models import ClientProfile
 from customer.models import State
+
 
 class InvoiceForm(ModelForm):
     def __init__(self, *args, **kwargs):
@@ -23,7 +23,7 @@ class InvoiceForm(ModelForm):
                                                      [(state.name, state.name) for state in State.objects.all()])
 
     company = forms.ModelChoiceField(queryset=CompanyProfile.objects.none(),  empty_label="-- Select Company --",
-                                     widget=forms.Select(attrs={'class':'form-control'}))
+                                     widget=forms.Select(attrs={'class': 'form-control'}))
     client = forms.ModelChoiceField(queryset=ClientProfile.objects.all(), empty_label="-- Select Client --",
                                     widget=forms.Select(attrs={'class':'form-control'}))
 

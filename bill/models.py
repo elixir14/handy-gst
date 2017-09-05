@@ -54,7 +54,7 @@ class Item(models.Model):
     quantity = models.FloatField(default=0.0)
     rate = models.FloatField(default=0.0)
     value = models.FloatField(default=0.0)
-    discount = models.FloatField(default=0.0, null=True, blank=True)
+    discount = models.FloatField(default=0.0)
 
     def __unicode__(self):
         return self.description

@@ -3,10 +3,10 @@ from __future__ import unicode_literals, absolute_import
 from company.models import CompanyProfile
 from client.models import ClientProfile
 from django.db import transaction
-from django.views.generic import CreateView, ListView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView
 from .forms import InvoiceForm, ItemFormSet
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from customer.models import Bank, Tax, Address, State
+from customer.models import Bank, Tax, Address, State, Contact
 from .models import Invoice, Item
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
@@ -18,18 +18,35 @@ from django.conf import settings
 
 @login_required
 def generate_pdf(request, id=None):
-    invoice = get_object_or_404(CompanyProfile, pk=id)
-    # if invoice:
-    items = []  # Item.objects.filter(invoice_id=invoice.id)
-    # Rendered
-    html_string = render_to_string('frontend/gst_bill.html', {'invoice': invoice, 'items': items})
-    html = HTML(string=html_string)
-    pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '\\frontend\\css\\gst_bill_style.css')])
+    if id:
+        invoice_object = get_object_or_404(Invoice, pk=id)
+        item_object = Item.objects.filter(invoice_id=invoice_object.id)
+        company_object = CompanyProfile.objects.get(pk=invoice_object.company_id)
+        bank_object = Bank.objects.get(id=company_object.bank_detail_id)
+        tax_object = Tax.objects.get(id=company_object.tax_detail_id)
+        address_object = Address.objects.get(pk=company_object.address_id)
+        state_object = State.objects.get(id=address_object.state_id)
+        contact_object = Contact.objects.get(pk=company_object.contact_id)
+        data = {'invoice': invoice_object,
+                'company': company_object,
+                'company_address': address_object,
+                'company_state': state_object,
+                'bank_detail': bank_object,
+                'tax_detail': tax_object,
+                'contact_detail': contact_object,
+                'items': item_object
+        }
+        # Rendered
+        html_string = render_to_string('frontend/gst_bill.html', context=data)
+        html = HTML(string=html_string)
+        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '\\frontend\\css\\gst_bill_style.css')])
 
-    # Creating http response
-    response = HttpResponse(pdf_file, content_type='application/pdf;')
-    response['Content-Disposition'] = 'inline; filename=invoice.pdf'
-    return response
+        # Creating http response
+        response = HttpResponse(pdf_file, content_type='application/pdf;')
+        response['Content-Disposition'] = 'inline; filename=invoice.pdf'
+        return response
+    else:
+        return HttpResponse("No Invoice")
 
 
 def company_detail(request):
@@ -46,7 +63,7 @@ def company_detail(request):
             "remarks": company_object.remarks,
             "terms": company_object.terms,
             "authorised_signatory": company_object.authorised_signatory,
-            "account_number": bank_detail.bank_name,
+            "account_number": bank_detail.account_number,
             "ifsc": bank_detail.ifsc,
             "pan": tax_detail.pan,
             "clients": clients,

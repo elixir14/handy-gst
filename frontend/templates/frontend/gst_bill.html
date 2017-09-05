@@ -10,15 +10,15 @@
       <div id="page-wrap">
          <table id="items">
             <tr>
-               <th>{{ invoice.company_name }}
+               <th>{{ company.company_name }}
                   <br>
-                  Address
+                  {{ company.address }}, {{company.city}}, {{company.state}}, {{company.zip }}
                   <br>
-                  Phone
+                  {{ company.phone }}
                </th>
             </tr>
             <tr>
-               <th>GSTIN: {{ invoice.gst }}</th>
+               <th>GSTIN: {{ company.gst }}</th>
             </tr>
             <tr>
                <th>TAX INVOICE
@@ -36,19 +36,19 @@
             </tr>
             <tr>
                <td>Invoice No</td>
-               <td width="100"></td>
+               <td width="100"> {{ invoice.invoice_no }}</td>
                <td>Duplicate for Transportation</td>
                <td width="100"></td>
             </tr>
             <tr>
                <td>Invoice Date</td>
-               <td></td>
+               <td>{{ invoice.invoice_date }}</td>
                <td rowspan="2"> Triplicate for Supplier</td>
                <td rowspan="2"></td>
             </tr>
             <tr>
-               <td>State</td>
-               <td>State Code</td>
+               <td>{{ company_state.name }}</td>
+               <td>{{ company_state.code }}</td>
             </tr>
          </table>
          <table id="items">
@@ -57,21 +57,21 @@
                <td colspan="2">Details of Consignee/shipped To</td>
             </tr>
             <tr>
-               <td colspan="2">Name</td>
-               <td colspan="2">Name</td>
+               <td colspan="2">{{ invoice.recipient }}</td>
+               <td colspan="2">{{ invoice.consignee }}</td>
             </tr>
             <tr>
-               <td colspan="2"><textarea>Address</textarea></td>
-               <td colspan="2" rowspan="2"><textarea>Address</textarea></td>
+               <td colspan="2"><textarea> {{ invoice.billing_address }}</textarea></td>
+               <td colspan="2" rowspan="2"><textarea>{{ invoice.shipping_address }}</textarea></td>
             </tr>
             <tr>
                <td colspan="2">GST/UIN</td>
             </tr>
             <tr>
-               <td >state</td>
-               <td >state code</td>
-               <td >state</td>
-               <td >state code</td>
+               <td > {{ invoice.billing_state }}</td>
+               <td > {{ invoice.billing_state_code }}</td>
+               <td >{{ invoice.shipping_state }}</td>
+               <td >{{ invoice.shipping_state_code }}</td>
             </tr>
          </table>
          <table id="items">
@@ -86,17 +86,19 @@
                <th>Less Discount</th>
                <th>Taxable value(Rs.)</th>
             </tr>
+            {% for item in items %}
             <tr class="item-row">
-               <td>Sr No.</td>
-               <td>Description of goods</td>
-               <td>HSN ACS</td>
-               <td>Quantity code</td>
-               <td>Qty</td>
-               <td>Rate</td>
-               <td>Value</td>
-               <td>Less Discount</td>
-               <td>Taxable value(Rs.)</td>
+               <td> {{ forloop.counter }}</td>
+               <td> {{ item.description}}</td>
+               <td> {{ item.hsn_code}}</td>
+               <td> {{ item.quantity_code}}</td>
+               <td> {{ item.quantity}}</td>
+               <td> {{ item.rate}}</td>
+               <td> {{ item.value}}</td>
+               <td> {{ item.discount}}</td>
+               <td> {{ item.taxable_value}}</td>
             </tr>
+            {% endfor %}
             <tr>
                <td colspan="4" align="right">Total:</td>
                <td> </td>
@@ -122,7 +124,8 @@
                <td colspan="2"></td>
             </tr>
             <tr>
-               <td colspan="5" rowspan="2" style="text-align:left;vertical-align:top;padding:0">Remarks: Notification number availed if any.</td>
+               <td colspan="5" rowspan="2" style="text-align:left;vertical-align:top;padding:0">
+                  {% if invoice.remarks %} {{ invoice.remarks}} {% else %} Remarks: Notification number availed if any. {% endif %}</td>
                <td colspan="3">Add IGST @ %</td>
                <td colspan="1"></td>
             </tr>
@@ -132,8 +135,10 @@
             </tr>
             <tr>
                <td colspan="3" rowspan="2" >
-                  <p style="text-align:center;vertical-align:top;padding:0">Bank Details:</p>
-                  <br>Bank Account Number:[[[number]]]<br>Bank Branch:[[[ifsc code]]]
+                  <p style="text-align:center;vertical-align:top;padding:0">Bank Details</p>
+                  Bank Name: {{ bank_detail.bank_name }}<br />
+                  Bank Account Number: {{ bank_detail.account_number }}<br>
+                  Bank Branch: {{ bank_detail.ifsc }}
                </td>
                <td colspan="2" rowspan="4" style="vertical-align:bottom;text-align:center;">(common seal)</td>
                <td colspan="3">Total value after tax (Rs.)</td>
@@ -144,18 +149,25 @@
                <td colspan="2"></td>
             </tr>
             <tr>
-               <td colspan="3">PAN number:</td>
-               <td colspan="4" rowspan="2" height="100" style="text-align:center;vertical-align:top;padding:0">(kjbfsbfksfbsfbsf)<br><textarea>For,</textarea></td>
+               <td colspan="3">PAN number: {{ tax_detail.pan }}</td>
+               <td colspan="4" rowspan="2" height="100" style="text-align:center;vertical-align:top;padding:0">(kjbfsbfksfbsfbsf)<br>
+                  <textarea>For, </textarea>
+                  {% if  invoice.authorised_signatory %}
+                     {{ invoice.authorised_signatory }}
+                  {% else %}
+                     {{ contact_detail.first_name}} {{ contact_detail.last_name }}
+                  {% endif %}</td>
             </tr>
             <tr>
                <td colspan="3" height="100">
                   <p style="text-align:center;vertical-align:top;padding:0">Terms And Condition:</p>
-                  <textarea></textarea>
+                  <textarea> {{ invoice.terms }}</textarea>
                </td>
             </tr>
             <th colspan="10"/>
             <tr>
-               <td colspan="5" height="25" style="vertical-align:bottom;text-align:right;">E-Mail :</td>
+               <td colspan="5" height="25" style="vertical-align:bottom;text-align:right;">E-Mail:</td>
+               <td>{{ contact_detail.email }}</td>
             </tr>
          </table>
       </div>
