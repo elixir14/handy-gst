@@ -22,7 +22,7 @@
                                     <th>#</th>
                                     <th>Invoice No.</th>
                                     <th>Invoice Date</th>
-                                    <th>Customer</th>
+                                    <th>Company</th>
                                     <th>Client</th>
                                     <th>Amount Paid</th>
                                 </thead>
@@ -38,8 +38,9 @@
                                     </td>
                                     <td>{{client.invoice_no}}</td>
                                     <td>{{client.invoice_date}}</td>
+                                    <td>{{client.company_id}}</td>
                                     <td>{{client.recipient}}</td>
-                                    <td>{{client.amount_paid}}</td>
+                                    <td>{{client.total}}</td>
 
                                 </tr>
                                 {% endfor %}

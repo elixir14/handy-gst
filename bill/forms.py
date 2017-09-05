@@ -8,14 +8,24 @@ from django import forms
 from .constants import ReportingPreference
 from company.models import CompanyProfile
 from client.models import ClientProfile
-
+from customer.models import State
 
 class InvoiceForm(ModelForm):
-    company = forms.ChoiceField(choices=([('', '-- Select Company --')]),
-                                widget=forms.Select(attrs={"class": "form-control"}), label="Select Company")
-    client = forms.ChoiceField(choices=([('', '-- Select Client --')]),
-                               widget=forms.Select(attrs={"class": "form-control"}),
-                               label="Select Client")
+    def __init__(self, *args, **kwargs):
+        if ['company', 'billing_state', 'shipping_state'] in kwargs.keys():
+            kwargs.pop(kwargs)
+        user = kwargs.pop('user')
+        super(InvoiceForm, self).__init__(*args, **kwargs)
+        self.fields['company'].queryset = CompanyProfile.objects.filter(customer__user=user)
+        self.fields['billing_state'].choices = tuple([("", "-- Select State --")] +
+                                                     [(state.name, state.name)for state in State.objects.all()])
+        self.fields['shipping_state'].choices = tuple([("", "-- Select State --")] +
+                                                     [(state.name, state.name) for state in State.objects.all()])
+
+    company = forms.ModelChoiceField(queryset=CompanyProfile.objects.none(),  empty_label="-- Select Company --",
+                                     widget=forms.Select(attrs={'class':'form-control'}))
+    client = forms.ModelChoiceField(queryset=ClientProfile.objects.all(), empty_label="-- Select Client --",
+                                    widget=forms.Select(attrs={'class':'form-control'}))
 
     client_gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTN/UIN')
     invoice_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
@@ -29,13 +39,13 @@ class InvoiceForm(ModelForm):
     billing_address = forms.CharField(
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Billing Address")
 
-    billing_state = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State")
-    billing_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State Code")
+    billing_state = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), label="Billing State")
+    billing_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}), label="Billing State Code")
 
     shipping_address = forms.CharField(
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Shipping Address")
-    shipping_state = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State")
-    shipping_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="State Code")
+    shipping_state = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), label="Shipping State")
+    shipping_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}), label="Shipping State Code")
 
     account_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
                                      label="Bank Account Number")
@@ -59,10 +69,10 @@ class InvoiceForm(ModelForm):
     class Meta:
         model = Invoice
         exclude = ()
-        fields = ('company', 'client', 'invoice_no', 'client_gst', 'recipient', 'billing_address',
-                  'billing_state', 'billing_state_code', 'consignee', 'shipping_address', 'shipping_state',
-                  'shipping_state_code', 'remarks', 'terms', 'authorised_signatory', 'account_number', 'ifsc', 'pan',
-                  'cgst', 'sgst', 'igst', 'total')
+        fields = ('company', 'client', 'invoice_no', 'client_gst', 'recipient', 'billing_address', 'billing_state',
+                  'billing_state_code',
+                  'consignee', 'shipping_address', 'shipping_state', 'shipping_state_code', 'remarks', 'terms',
+                  'authorised_signatory', 'account_number', 'ifsc', 'pan', 'cgst', 'sgst', 'igst', 'total')
 
 
 class ItemForm(ModelForm):

@@ -4,42 +4,43 @@ from company.models import CompanyProfile
 from client.models import ClientProfile
 from django.db import transaction
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
-from django.views.generic.edit import ModelFormMixin
 from .forms import InvoiceForm, ItemFormSet
 from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
 from customer.models import Bank, Tax, Address, State
-from .models import Invoice
+from .models import Invoice, Item
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse_lazy
+from django.contrib.auth.decorators import login_required
+from django.template.loader import render_to_string
+from weasyprint import HTML, CSS
+from django.conf import settings
 
 
-# @login_required
-# def add_bill(request):
-#     companies = CompanyProfile.objects.all().order_by('name')
-#     clients = ClientProfile.objects.all().order_by('name')
-#     form = ItemFormSet()
-#     # if request.method == "POST":
-#     #     print (request.POST)
-#
-#     return render(request, 'frontend/bill_add.html', {'form': form, 'companies': companies, 'client': clients})
+@login_required
+def generate_pdf(request, id=None):
+    invoice = get_object_or_404(CompanyProfile, pk=id)
+    # if invoice:
+    items = []  # Item.objects.filter(invoice_id=invoice.id)
+    # Rendered
+    html_string = render_to_string('frontend/gst_bill.html', {'invoice': invoice, 'items': items})
+    html = HTML(string=html_string)
+    pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '\\frontend\\css\\gst_bill_style.css')])
 
+    # Creating http response
+    response = HttpResponse(pdf_file, content_type='application/pdf;')
+    response['Content-Disposition'] = 'inline; filename=invoice.pdf'
+    return response
 
-# class InvoiceCreate(CreateView):
-#     model = Invoice
-#     fields = ['invoice_no', 'invoice_date', 'gst', '']
 
 def company_detail(request):
-    company_id = request.GET['company_id']
-    # print (company_id)
+    company_id = request.GET['id_company']
     company_object = CompanyProfile.objects.get(pk=company_id)
     clients = []
     client_object = ClientProfile.objects.filter(company_id=company_object.id)
     for client in client_object:
         clients.append(dict(id=client.id, value=client.client_name))
-
     bank_detail = Bank.objects.get(id=company_object.bank_detail_id)
     tax_detail = Tax.objects.get(id=company_object.tax_detail_id)
-
     data = {
         'results': {
             "remarks": company_object.remarks,
@@ -60,24 +61,20 @@ def company_detail(request):
 def client_detail(request):
     client_id = request.GET['client_id']
     client_object = ClientProfile.objects.get(pk=client_id)
-    # print(client_object.__dict__)
-
     billing_address_object = Address.objects.get(pk=client_object.billing_address_id)
     shipping_address_object = Address.objects.get(pk=client_object.shipping_address_id)
-
     billing_state_object = State.objects.get(pk=billing_address_object.state_id)
     shipping_state_object = State.objects.get(pk=shipping_address_object.state_id)
-
     data = {
         'results': {
-                    'recipient': client_object.client_name,
-                    "gst": client_object.gst,
-                    "billing_address": billing_address_object.address,
-                    "billing_state": billing_state_object.name,
-                    "billing_state_code": billing_state_object.code,
-                    "shipping_address": shipping_address_object.address,
-                    "shipping_state": shipping_state_object.name,
-                    "shipping_state_code": shipping_state_object.code,
+            'recipient': client_object.client_name,
+            "gst": client_object.gst,
+            "billing_address": billing_address_object.address,
+            "billing_state": billing_state_object.name,
+            "billing_state_code": billing_state_object.code,
+            "shipping_address": shipping_address_object.address,
+            "shipping_state": shipping_state_object.name,
+            "shipping_state_code": shipping_state_object.code,
         }
     }
     return JsonResponse(data)
@@ -91,32 +88,22 @@ def bill_list(request, id=None):
     return render(request, "frontend/invoice_list.html", {'clients': invoice})
 
 
-class InvoiceList(ListView):
-    model = Invoice
-
-
-class InvoiceCreate(CreateView):
-    model = Invoice
-    fields = "__all__"
-
-
 class ItemCreate(CreateView):
     form_class = InvoiceForm
     model = Invoice
     template_name = 'frontend/invoice_form.html'
-    # success_url = reverse_lazy("bill_list")
+    success_url = reverse_lazy("frontend:bill:bill_list")
 
     def __init__(self, **kwargs):
         super(ItemCreate, self).__init__(**kwargs)
-        self.request = None
-        self.object = None
+
+    def get_form_kwargs(self):
+        kwargs = super(ItemCreate, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_context_data(self, **kwargs):
-        data = super(ItemCreate, self).get_context_data(**kwargs)
-        print (data)
-        print ("-------------------")
-        print (self.request.POST)
-        print ("+++++++++++++++++++")
+        data = super(ItemCreate, self).get_context_data(user=self.request.user, **kwargs)
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST)
         else:
@@ -124,20 +111,13 @@ class ItemCreate(CreateView):
         return data
 
     def form_valid(self, form):
-        print ("-------------------dhdhdhdhhd")
-        print (self.request.POST)
         context = self.get_context_data()
         items = context['items']
-        print (items)
         with transaction.atomic():
             self.object = form.save()
             if items.is_valid():
-                print ("inside  save")
                 items.instance = self.object
                 items.save()
-                print ("save done")
-            else:
-                print ("-------Error-----")
         return super(ItemCreate, self).form_valid(form)
 
 
@@ -145,12 +125,10 @@ class ItemUpdate(UpdateView):
     model = Invoice
     form_class = InvoiceForm
     template_name = "frontend/invoice_form.html"
-    success_url = reverse_lazy('bill_list')
+    success_url = reverse_lazy("frontend:bill:bill_list")
 
     def __init__(self, **kwargs):
         super(ItemUpdate, self).__init__(**kwargs)
-        self.request = None
-        self.object = None
 
     def get_context_data(self, **kwargs):
         data = super(ItemUpdate, self).get_context_data(**kwargs)

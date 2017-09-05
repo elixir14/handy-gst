@@ -13,7 +13,6 @@
   </script>
 
 <script type="text/javascript">
-
     // To fill company details
 
     $("#id_company").change(function () {
@@ -21,7 +20,7 @@
         $.ajax({
             url: 'company_detail/',
             data: {
-              'company_id': $company_id
+              'id_company': $company_id
             },
             dataType: 'json',
             success: function (data) {
@@ -67,10 +66,10 @@
                 $("#id_billing_address").val(data.results.billing_address);
                 $("#id_client_gst").attr("value", data.results.gst);
                 $("#id_billing_address").val(data.results.billing_address);
-                $("#id_billing_state").attr("value", data.results.billing_state);
+                $("#id_billing_state").val(data.results.billing_state).attr("selected","selected");
                 $("#id_billing_state_code").attr("value", data.results.billing_state_code);
                 $("#id_shipping_address").val(data.results.shipping_address);
-                $("#id_shipping_state").attr("value", data.results.shipping_state);
+                $("#id_shipping_state").val(data.results.shipping_state).attr("selected","selected");
                 $("#id_shipping_state_code").attr("value", data.results.shipping_state_code);
               }
             }
@@ -126,7 +125,6 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form.non_field_errors }}
-
                             {% for field in form %}
                                 <div class="form-group">
                                       <label class="col-sm-3"> {{ field.label_tag }} </label>
