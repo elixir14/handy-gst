@@ -10,6 +10,7 @@ from .constants import CustomerStatus
 class State(models.Model):
     name = models.CharField(max_length=50)
     code = models.CharField(max_length=3, unique=True)
+    short_name = models.CharField(max_length=3, unique=True)
 
     class Meta:
         db_table = "gst_state"
