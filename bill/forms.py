@@ -12,8 +12,9 @@ from customer.models import State
 
 class InvoiceForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        if ['company', 'billing_state', 'shipping_state'] in kwargs.keys():
-            kwargs.pop(kwargs)
+        for item in ['company', 'billing_state', 'shipping_state']:
+            if item in kwargs.keys():
+                kwargs.pop(item)
         user = kwargs.pop('user')
         super(InvoiceForm, self).__init__(*args, **kwargs)
         self.fields['company'].queryset = CompanyProfile.objects.filter(customer__user=user)
@@ -27,10 +28,9 @@ class InvoiceForm(ModelForm):
     client = forms.ModelChoiceField(queryset=ClientProfile.objects.all(), empty_label="-- Select Client --",
                                     widget=forms.Select(attrs={'class':'form-control'}))
 
-    client_gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTN/UIN')
+    client_gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTIN / UIN')
     invoice_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)
-    invoice_date = forms.DateField(
-        widget=forms.TextInput(attrs={'class': 'form-control', 'style': 'width:50%'}))
+    invoice_date = forms.DateField(widget=forms.TextInput(attrs={'class': 'form-control'}))
 
     recipient = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True,
                                 label="Recipient Name")
@@ -40,12 +40,12 @@ class InvoiceForm(ModelForm):
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Billing Address")
 
     billing_state = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), label="Billing State")
-    billing_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}), label="Billing State Code")
+    billing_state_code = forms.CharField(widget=forms.HiddenInput())
 
     shipping_address = forms.CharField(
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Shipping Address")
     shipping_state = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), label="Shipping State")
-    shipping_state_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}), label="Shipping State Code")
+    shipping_state_code = forms.CharField(widget=forms.HiddenInput())
 
     account_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
                                      label="Bank Account Number")
@@ -54,25 +54,35 @@ class InvoiceForm(ModelForm):
 
     remarks = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     terms = forms.CharField(
-        widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}),
+        widget=forms.Textarea(attrs={'cols': '2', 'rows': '1', 'class': 'form-control'}),
         label="Terms and Conditions", required=False)
-    authorised_signatory = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
+    authorised_signatory = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
+                                           required=False, label="Authorised Signatory")
 
-    cgst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False, label="CGST")
-    sgst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False, label="SGST")
-    igst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False, label="IGST")
+    cgst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'onKeyup': "Test();"}), required=False, label="CGST")
+    sgst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'onKeyup': "Test();"}), required=False, label="SGST")
+    igst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'onKeyup': "Test();"}), required=False, label="IGST")
 
     total = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
-                             required=False,
-                             label="Amount to Paid")
+                             required=False, label="Total")
+    gst_amount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
+                             required=False, label="Tax Amount: GST")
+
+    grand_total = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
+                             required=False, label="Total Amount After Tax")
+
+    cgst_total = forms.FloatField(widget=forms.HiddenInput())
+    sgst_total = forms.FloatField(widget=forms.HiddenInput())
+    igst_total = forms.FloatField(widget=forms.HiddenInput())
+
 
     class Meta:
         model = Invoice
         exclude = ()
-        fields = ('company', 'client', 'invoice_no', 'client_gst', 'recipient', 'billing_address', 'billing_state',
-                  'billing_state_code',
-                  'consignee', 'shipping_address', 'shipping_state', 'shipping_state_code', 'remarks', 'terms',
-                  'authorised_signatory', 'account_number', 'ifsc', 'pan', 'cgst', 'sgst', 'igst', 'total')
+        fields = ('company', 'client', 'invoice_no','invoice_date', 'recipient', 'consignee', 'billing_address',
+                  'shipping_address', 'billing_state', 'shipping_state', 'authorised_signatory', 'client_gst',
+                  'account_number', 'cgst' , 'ifsc', 'sgst', 'pan', 'igst', 'remarks', 'gst_amount', 'terms' ,'total',
+                  'grand_total', 'shipping_state_code', 'billing_state_code', 'cgst_total', 'sgst_total', 'igst_total')
 
 
 class ItemForm(ModelForm):
@@ -90,7 +100,7 @@ class ItemForm(ModelForm):
     discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup': "Test();"}),
                                 required=False)
     tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
-                                 required=False)
+                                 required=False, label="Taxable Value")
 
     class Meta:
         model = Item

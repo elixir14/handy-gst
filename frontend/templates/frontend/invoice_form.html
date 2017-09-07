@@ -37,7 +37,7 @@
                 $("#id_sgst").attr("value", data.results.sgst);
                 $("#id_igst").attr("value", data.results.igst);
                 $("#id_client").empty();
-                id_car_select = document.getElementById("id_car_select");
+                id_client = document.getElementById("id_client");
                 id_client.options.add(new Option('-- Select Client --',''))
                 for (index in data.results.clients) {
                         client = data.results.clients[index]
@@ -56,7 +56,7 @@
         $.ajax({
             url: 'client_detail/',
             data: {
-              'client_id': $client_id
+              'id_client': $client_id
             },
             dataType: 'json',
             success: function (data) {
@@ -89,12 +89,14 @@
             var value = rate*quantity;
             $("#id_item_set-" + i + "-value").val(value);
             var discount = parseFloat($("#id_item_set-" + i + "-discount").val());
-            discount = discount || 0.00;
+            if (discount == null && discount == ""){
+                discount = 0.00;
+            }
             if (discount > 100)
              {
                 discount = 100;
              }
-             taxable_value = value
+            taxable_value = value
             if (discount > 0)
             {
                 taxable_value = value*(100-discount)/100;
@@ -102,9 +104,32 @@
             $("#id_item_set-" + i + "-tax_value").val(taxable_value);
             total = total + taxable_value;
         }
-      //  $("#id_item_set-" + 0 + "-hsn_code").val(total);
         $("#id_total").val(total);
+        cgst = parseFloat($("#id_cgst").val()) || 0.00 ;
+        sgst = parseFloat($("#id_sgst").val()) || 0.00 ;
+        igst = parseFloat($("#id_igst").val()) || 0.00;
+        tax = cgst + sgst + igst ;
+        tax_amount = (total*tax)/100 ;
+        $("#id_gst_amount").val(tax_amount);
+        $("#id_grand_total").val(total + tax_amount);
 
+        $("#id_cgst_total").val((total*cgst)/100);
+        $("#id_sgst_total").val((total*sgst)/100);
+        $("#id_igst_total").val((total*igst)/100);
+     }
+
+      function Test_New()
+     {
+        var count = parseInt($("#id_item_set-TOTAL_FORMS").val());
+        var total = parseFloat($("#id_total").val());
+        var total_new = 0.00;
+        for (i = 0; i < count; i++) {
+            var rate = parseFloat($("#id_item_set-" + i + "-rate").val());
+            var quantity = parseFloat($("#id_item_set-" + i + "-quantity").val());
+            var value = rate*quantity;
+        }
+        //$("#id_item_set-" + 0 + "-hsn_code").val(total_new);
+        $("#id_total").val(total_new);
      }
 </script>
 {% endblock %}
@@ -125,22 +150,25 @@
                         <form method="post">
                             {% csrf_token %}
                             {{ form.non_field_errors }}
-                            {% for field in form %}
-                                <div class="form-group">
-                                      <label class="col-sm-3"> {{ field.label_tag }} </label>
-                                      <div class="col-lg-3"> {{ field }}
+                            <div class="row">
+                                {% for field in form.hidden_fields %}
+                                    {{ field }}
+                                {% endfor %}
+                            {% for field in form.visible_fields  %}
+                                <div>
+                                      <div class="col-lg-2"> {{ field.label }} </div>
+                                      <div class="col-lg-4"> {{ field }}
                                               <span class="help-block">
                                                 {{ field.errors}}
                                               </span>
                                       </div>
                                 </div>
                                 {% endfor %}
-
+                            </div>
                             <div class="row">
                                 <div class="col-md-12">
                                 <table class="table">
                                     {{ items.management_form }}
-
                                     {% for form in items.forms %}
                                         {% if forloop.first %}
                                             <thead>

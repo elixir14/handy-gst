@@ -5,10 +5,10 @@ from client.models import ClientProfile
 from django.db import transaction
 from django.views.generic import CreateView, UpdateView
 from .forms import InvoiceForm, ItemFormSet
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponse
 from customer.models import Bank, Tax, Address, State, Contact
 from .models import Invoice, Item
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
@@ -43,12 +43,12 @@ def generate_pdf(request, id=None):
 
         # Creating http response
         response = HttpResponse(pdf_file, content_type='application/pdf;')
-        response['Content-Disposition'] = 'inline; filename=invoice.pdf'
+        response['Content-Disposition'] = 'inline; filename=invoice_%s.pdf' % invoice_object.id
         return response
     else:
         return HttpResponse("No Invoice")
 
-
+@login_required
 def company_detail(request):
     company_id = request.GET['id_company']
     company_object = CompanyProfile.objects.get(pk=company_id)
@@ -74,9 +74,9 @@ def company_detail(request):
     }
     return JsonResponse(data)
 
-
+@login_required
 def client_detail(request):
-    client_id = request.GET['client_id']
+    client_id = request.GET['id_client']
     client_object = ClientProfile.objects.get(pk=client_id)
     billing_address_object = Address.objects.get(pk=client_object.billing_address_id)
     shipping_address_object = Address.objects.get(pk=client_object.shipping_address_id)
@@ -96,13 +96,15 @@ def client_detail(request):
     }
     return JsonResponse(data)
 
-
+@login_required
 def bill_list(request, id=None):
-    if id:
-        invoice = Invoice.objects.get(pk=id)
-    else:
-        invoice = Invoice.objects.all()
-    return render(request, "frontend/invoice_list.html", {'clients': invoice})
+    # invoices = Invoice.objects.for_user(user=request.user)
+    invoices = Invoice.objects.filter(company__customer__user=request.user)
+    for invoice in invoices:
+        company = CompanyProfile.objects.get(pk=invoice.company_id)
+        invoice.company_id = company.company_name
+    data = {'clients': invoices}
+    return render(request, "frontend/invoice_list.html", context=data)
 
 
 class ItemCreate(CreateView):
@@ -112,6 +114,7 @@ class ItemCreate(CreateView):
     success_url = reverse_lazy("frontend:bill:bill_list")
 
     def __init__(self, **kwargs):
+        self.object = None
         super(ItemCreate, self).__init__(**kwargs)
 
     def get_form_kwargs(self):
@@ -145,7 +148,13 @@ class ItemUpdate(UpdateView):
     success_url = reverse_lazy("frontend:bill:bill_list")
 
     def __init__(self, **kwargs):
+        self.object = None
         super(ItemUpdate, self).__init__(**kwargs)
+
+    def get_form_kwargs(self):
+        kwargs = super(ItemUpdate, self).get_form_kwargs()
+        kwargs["user"] = self.request.user
+        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super(ItemUpdate, self).get_context_data(**kwargs)
@@ -163,14 +172,16 @@ class ItemUpdate(UpdateView):
             if items.is_valid():
                 items.instance = self.object
                 items.save()
-            else:
-                print ("Error in saving form.")
         return super(ItemUpdate, self).form_valid(form)
 
-
-def bill_delete(request, id=None):
-    if id:
-        invoice = Invoice.objects.get(pk=id)
-        invoice.delete()
-        invoices = Invoice.objects.all()
+@login_required
+def bill_delete(request, id):
+    # invoice = Invoice.objects.for_user(user=request.user).get(pk=id)
+    invoices = Invoice.objects.filter(company__customer__user=request.user)
+    flag = False
+    for invoice in invoices:
+        if str(invoice.id) == id:
+            invoice.delete()
+    # invoices = Invoice.objects.for_user(user=request.user)
+    invoices = Invoice.objects.filter(company__customer__user=request.user)
     return render(request, "frontend/invoice_list.html", {'clients': invoices})

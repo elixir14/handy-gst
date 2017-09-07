@@ -24,27 +24,30 @@
                                     <th>Invoice Date</th>
                                     <th>Company</th>
                                     <th>Client</th>
-                                    <th>Amount Paid</th>
+                                    <th>Total</th>
+                                    <th>GST Amount</th>
+                                    <th>Grand Total</th>
                                 </thead>
                                 <tbody>
                                 {% for client in clients %}
                                 <tr>
-                                    <td><a href="{% url 'frontend:bill:bill_list' id=client.id %}">
+                                    <td><a href="{% url 'frontend:bill:bill_list' client.pk %}">
                                             <i class="fa fa-pencil-square-o fa-2" aria-hidden="true"></i>
                                         </a>&nbsp;&nbsp;&nbsp;
-                                        <a href="{% url 'frontend:bill:bill_delete' id=client.id %}">
+                                        <a href="{% url 'frontend:bill:bill_delete' client.pk %}">
                                             <i class="fa fa-trash-o fa-2" aria-hidden="true"></i>
                                         </a>&nbsp;&nbsp;&nbsp;
-                                        <a href="{% url 'frontend:bill:generate_pdf' id=client.id %}" target="_blank">
+                                        <a href="{% url 'frontend:bill:generate_pdf' client.pk %}" target="_blank">
                                             <i class="fa fa-download" aria-hidden="true"></i>
                                         </a>
                                     </td>
                                     <td>{{client.invoice_no}}</td>
                                     <td>{{client.invoice_date}}</td>
-                                    <td>{{client.company_id}}</td>
+                                    <td>{{client.company_id }}</td>
                                     <td>{{client.recipient}}</td>
                                     <td>{{client.total}}</td>
-
+                                    <td>{{client.gst_amount}}</td>
+                                    <td>{{client.grand_total}}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
