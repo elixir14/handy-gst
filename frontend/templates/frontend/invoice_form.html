@@ -31,7 +31,7 @@
                 $("#id_ifsc").attr("value", data.results.ifsc);
                 $("#id_pan").attr("value", data.results.pan);
                 $("#id_remarks").attr("value", data.results.remarks);
-                $("#id_terms").attr("value", data.results.terms);
+                $("#id_terms").val(data.results.terms);
                 $("#id_authorised_signatory").attr("value", data.results.authorised_signatory);
                 $("#id_cgst").attr("value", data.results.cgst);
                 $("#id_sgst").attr("value", data.results.sgst);
@@ -109,7 +109,7 @@
         sgst = parseFloat($("#id_sgst").val()) || 0.00 ;
         igst = parseFloat($("#id_igst").val()) || 0.00;
         tax = cgst + sgst + igst ;
-        tax_amount = (total*tax)/100 ;
+        tax_amount = (total*tax)/100;
         $("#id_gst_amount").val(tax_amount);
         $("#id_grand_total").val(total + tax_amount);
 

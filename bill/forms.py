@@ -105,6 +105,6 @@ class ItemForm(ModelForm):
     class Meta:
         model = Item
         exclude = ()
-        fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount')
+        fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount', 'tax_value')
 
 ItemFormSet = inlineformset_factory(Invoice, Item, form=ItemForm, extra=1)

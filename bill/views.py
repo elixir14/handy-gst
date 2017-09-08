@@ -178,7 +178,6 @@ class ItemUpdate(UpdateView):
 def bill_delete(request, id):
     # invoice = Invoice.objects.for_user(user=request.user).get(pk=id)
     invoices = Invoice.objects.filter(company__customer__user=request.user)
-    flag = False
     for invoice in invoices:
         if str(invoice.id) == id:
             invoice.delete()
