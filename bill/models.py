@@ -3,8 +3,6 @@ from __future__ import unicode_literals
 from django.db import models
 from company.models import CompanyProfile
 from client.models import ClientProfile
-from django.contrib.auth.models import User
-from customer.models import State
 from common.Sample import get_current_user
 
 
@@ -64,7 +62,7 @@ class Invoice(models.Model):
 
 class Item(models.Model):
     invoice = models.ForeignKey(Invoice, on_delete=models.CASCADE)
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, null=False, blank=False)
     hsn_code = models.CharField(max_length=10, null=True, blank=True)
     quantity_code = models.CharField(max_length=10, null=True, blank=True)
     quantity = models.FloatField(default=0.0)
