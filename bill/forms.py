@@ -41,8 +41,8 @@ class InvoiceForm(ModelForm):
         widget=forms.Textarea(attrs={'cols': '2', 'rows': '2', 'class': 'form-control'}), label="Shipping Address")
     shipping_state = forms.ChoiceField(widget=forms.Select(attrs={'class': 'form-control'}), label="Shipping State")
     account_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
-                                     label="Bank Account Number")
-    ifsc = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="Bank IFSC Code")
+                                     label="Bank Account Number", required=False)
+    ifsc = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="Bank IFSC Code", required=False)
     pan = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), label="PAN Number")
     remarks = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     terms = forms.CharField(
@@ -51,18 +51,18 @@ class InvoiceForm(ModelForm):
     authorised_signatory = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}),
                                            required=False, label="Authorised Signatory")
     cgst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'onKeyup': "Test();"}),
-                            required=False, label="CGST")
+                            required=False, label="CGST", initial=0.0)
     sgst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'onKeyup': "Test();"}),
-                            required=False, label="SGST")
+                            required=False, label="SGST", initial=0.0)
     igst = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'onKeyup': "Test();"}),
-                            required=False, label="IGST")
+                            required=False, label="IGST", initial=0.0)
     total = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
-                            required=False, label="Total")
+                            required=False, label="Total", initial=0.0)
     gst_amount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
-                            required=False, label="Tax Amount: GST")
+                            required=False, label="Tax Amount: GST", initial=0.0)
 
     grand_total = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
-                             required=False, label="Total Amount After Tax")
+                             required=False, label="Total Amount After Tax", initial=0.0)
 
     cgst_total = forms.FloatField(widget=forms.HiddenInput())
     sgst_total = forms.FloatField(widget=forms.HiddenInput())
@@ -87,15 +87,15 @@ class ItemForm(ModelForm):
                                required=False)
     quantity_code = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=False)
     quantity = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control col-xs-2', 'onKeyup': "Test();"}),
-                                required=True)
+                                required=True, initial=0.0)
     rate = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup': "Test();"}),
-                            required=True)
+                            required=True, initial=0.0)
     value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
-                             required=False)
+                             required=False, initial=0.0)
     discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup': "Test();"}),
-                                required=False)
+                                required=False, initial=0.0)
     tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
-                                 required=False, label="Taxable Value")
+                                 required=False, label="Taxable Value", initial=0.0)
 
     class Meta:
         model = Item

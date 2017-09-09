@@ -14,7 +14,6 @@ class InvoiceManager(models.Manager):
         return super(InvoiceManager, self).get_queryset().filter(company__customer__user=user)
 
 
-
 class Invoice(models.Model):
     # objects = InvoiceManager()
     company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE)

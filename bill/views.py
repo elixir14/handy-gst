@@ -29,7 +29,7 @@ def generate_pdf(request, id=None):
         address_object = Address.objects.get(pk=company_object.address_id)
         state_object = State.objects.get(id=address_object.state_id)
         contact_object = Contact.objects.get(pk=company_object.contact_id)
-        total = {'quantity': 0, 'rate': 0, 'value': 0, 'discount':0, 'tax_value': 0}
+        total = {'quantity': 0, 'rate': 0, 'value': 0, 'discount': 0, 'tax_value': 0}
         for item in item_object:
             total['quantity'] += item.quantity
             total['rate'] += item.rate
@@ -45,14 +45,15 @@ def generate_pdf(request, id=None):
                 'tax_detail': tax_object,
                 'contact_detail': contact_object,
                 'items': item_object,
-                # 'total': total
-                'total_in_words': num2words(invoice_object.grand_total, lang='en').capitalize()
+                'total': total,
+                'total_in_words': num2words(invoice_object.grand_total, lang='en').capitalize(),
+                'title': invoice_object.invoice_no
         }
         # Rendered
         # html_string = render_to_string('frontend/gst_bill.html', context=data)
         html_string = render_to_string('frontend/bill.html', context=data)
         html = HTML(string=html_string)
-        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '\\frontend\\css\\gst_bill_style.css')])
+        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//gst_bill_style.css')])
 
         # Creating http response
         response = HttpResponse(pdf_file, content_type='application/pdf;')

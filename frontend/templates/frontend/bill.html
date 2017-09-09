@@ -1,25 +1,24 @@
 <html>
 <head>
-
-</head>
+<title> {{ title }}</title>
 </head>
 <body>
 <table border="0" width="800" style="border:1px solid #999999;font-size:11px;" cellspacing="0" class="border" >
-
-  <tr>
+<tr>
      <td colspan = "10" align="center" style="border-bottom:1px solid #999999;text-align:center;">
                 {{ company.company_name }}
                 <br>
                 {{ company_address.address }}, {{company_address.city}}, {{company_address.state}}, {{company_address.zip }}
                 <br>
                 {{ contact_detail.phone_number }}</br></br></td>
-  </tr>
+</tr>
 
 
-<tr><td colspan = "5"style="border-bottom:1px solid #999999;text-align:right;"><b>GSTIN:</b></td>
+<tr><td colspan = "5" style="border-bottom:1px solid #999999;text-align:right;"><b>GSTIN:</b></td>
         <td colspan="5">{{ company.gst }}</td>
 </tr>
-<tr><td colspan = "10" align="center" style="border-bottom:1px solid #999999;text-align:center;"><b>TAX INVOICE</b></br>(U/S-31(1)of CGST Act,2017 read with Rule 1) </td></tr>
+<tr><td colspan = "10" align="center" style="border-bottom:1px solid #999999;text-align:center;"><b>TAX INVOICE</b></br>(U/S-31(1)of CGST Act,2017 read with Rule 1) </td>
+</tr>
 
 <tr>
         <td colspan = "2" style="border-right:1px solid #999999;border-bottom:1px solid #999999;">Reverse charge</td>
@@ -46,8 +45,7 @@
         <td colspan = "4"style="border-right:1px solid #999999;border-bottom:1px solid #999999;"></td>
         <td style="border-bottom:1px solid #999999;"width="100"></td>
 </tr>
-
-      <tr><td colspan = "10"style="border-bottom:1px solid #999999;"></br></td></tr>
+<tr><td colspan = "10"style="border-bottom:1px solid #999999;"></br></td></tr>
 
 <tr>
         <td colspan = "5"align="center"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">Detail Of Recipient/Billed To</td>
@@ -68,8 +66,8 @@
 <tr>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;">GSTIN/UIN</td>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;"> {{ client.gst }}</td>
-          <td colspan = "3"style="border-bottom:1px solid #999999;border-right:1px solid #999999;"></td>
-          <td colspan = "5"style="border-bottom:1px solid #999999;"></td>
+        <td colspan = "3" style="border-bottom:1px solid #999999;border-right:1px solid #999999;"></td>
+        <td colspan = "5" style="border-bottom:1px solid #999999;"></td>
 
 </tr>
 <tr>
@@ -92,7 +90,7 @@
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;"width="80"align="center">Rate</td>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;"width="80"align="center">Value</td>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;" align="center">Less Discount</td>
-        <td style="border-bottom:1px solid #999999;" align="center">Texeble value(Rs)</td>
+        <td style="border-bottom:1px solid #999999;" align="center">Taxable value(Rs.)</td>
 </tr>
         {% for item in items %}
 <tr>
@@ -110,7 +108,7 @@
 
 
 <tr>
-        <td colspan = "5"align="right"style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total:</td>
+        <td colspan = "5"align="right"style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total: <b>{{ invoice.grand_total }}</b></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
@@ -125,7 +123,7 @@
 
 </tr>
 <tr>
-        <td colspan = "7"style="border-right:1px solid #999999;">Total Invoice Value in Words: {{ total_in_words }}</td>
+        <td colspan = "7"style="border-right:1px solid #999999;">Total Invoice Value in Words: <b>{{ total_in_words }}</b></td>
         <td colspan = "2"style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total Value Before Tax(Rs.)</td>
         <td  style=" border-bottom:1px solid #999999;">{{ invoice.total }}</td>
 
@@ -176,14 +174,14 @@
         <th colspan = "1"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">PAN NO:</th>
         <td colspan = "4"style="border-bottom:1px solid #999999;border-right:1px solid #999999;" >{{ tax_detail.pan }}</td>
         <td colspan = "2" style="border-right:1px solid #999999;"></td>
-        <td colspan = "3" >for,</td>
+        <td colspan = "3">for,</td>
 
 
 
 </tr>
 <tr>
 
-        <th colspan = "5" align="center"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">:Terms And Condition: <br /> {{ invoice.terms }}</th>
+        <th colspan = "5" align="center"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">Terms And Condition <br /> {{ invoice.terms }}</th>
         <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;" align="center"></br></br></br>(common seal)</td>
         <td colspan = "3"style="border-bottom:1px solid #999999;" align="center"></br> {% if  invoice.authorised_signatory %}
                      {{ invoice.authorised_signatory }}
@@ -196,11 +194,10 @@
 
 <tr><td colspan = "10"style="border-bottom:1px solid #999999;"></br></td></tr>
 
-<tr><td colspan = "5" align="center" style="border-bottom:1px solid #999999;text-align:right;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<tr><td colspan = "5" align="center" style="border-bottom:1px solid #999999;text-align:right;">
         Email:</td><td colspan="5"> {{ contact_detail.email }} </td></tr>
 
 
-</tr>
 </table>
 </body>
 

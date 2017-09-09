@@ -121,14 +121,17 @@
       function Test_New()
      {
         var count = parseInt($("#id_item_set-TOTAL_FORMS").val());
-        var total = parseFloat($("#id_total").val());
+        console.log(count)
         var total_new = 0.00;
         for (i = 0; i < count; i++) {
             var rate = parseFloat($("#id_item_set-" + i + "-rate").val());
             var quantity = parseFloat($("#id_item_set-" + i + "-quantity").val());
             var value = rate*quantity;
+            var discount = parseFloat($("#id_item_set-" + i + "-discount").val());
+            var taxable_value = parseFloat($("#id_item_set-" + i + "-tax_value").val());
+            console.log(rate, quantity, value, discount);
         }
-        //$("#id_item_set-" + 0 + "-hsn_code").val(total_new);
+       // total_new = total_new + taxable_value;
         $("#id_total").val(total_new);
      }
 </script>
