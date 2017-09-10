@@ -53,11 +53,12 @@ def generate_pdf(request, id=None):
         # html_string = render_to_string('frontend/gst_bill.html', context=data)
         html_string = render_to_string('frontend/bill.html', context=data)
         html = HTML(string=html_string)
-        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//gst_bill_style.css')])
+        pdf_file = html.write_pdf()
+        # pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//gst_bill_style.css')])
 
         # Creating http response
         response = HttpResponse(pdf_file, content_type='application/pdf;')
-        response['Content-Disposition'] = 'inline; filename=invoice_%s.pdf' % invoice_object.id
+        response['Content-Disposition'] = 'inline; filename=%s.pdf' % invoice_object.invoice_no
         return response
     else:
         return HttpResponse("No Invoice")

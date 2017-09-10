@@ -44,12 +44,13 @@
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Phone Number</label>
-                                <input class="form-control" id=phone_number name="phone_number"
-                                       value="{{profile.contact.phone_number}}">
+                                <input class="form-control" id="phone_number" name="phone_number"
+                                       value="{{profile.contact.phone_number|default:''}}">
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Fax Number</label>
-                                <input class="form-control" name="fax_number" value="{{profile.contact.fax_number}}">
+                                <input class="form-control" name="fax_number"
+                                       value="{{profile.contact.fax_number|default:''}}">
                             </div>
                             <div class="form-group col-lg-6">
                                 <label>Address</label>
@@ -62,6 +63,7 @@
                             <div class="form-group col-lg-6">
                                 <label>State</label>
                                 <select name="state" class="form-control">
+                                    <option value="-1">-- Select State -- </option>
                                     {% for state in states %}
                                     <option {% if state.id == profile.address.state.id %} selected {% endif %}
                                             value="{{state.id}}">{{state.name}}

@@ -25,7 +25,7 @@ def company_profile(request):
                               {'form': company_form, 'states': state, 'error_message': item.errors})
         if (request.POST and company_form.is_valid() and contact_form.is_valid() and
                 address_form.is_valid() and bank_form.is_valid() and tax_form.is_valid()):
-            print (request.user.id)
+            # print (request.user.id)
             contact_instance = contact_form.save()
             profile = company_form.save(commit=False)
             address_instance = address_form.save()

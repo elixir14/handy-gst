@@ -103,7 +103,7 @@
                                         <label>CGST Rate@%</label> <input type="text"
                                                                           class="form-control" name="cgst"
                                                                           placeholder="Enter CGST Rate"
-                                                                          value="{{profile.tax_detail.cgst}}">
+                                                                          value="{{profile.tax_detail.cgst|default:''}}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -111,7 +111,7 @@
                                         <label>SGST Rate@%</label> <input type="text"
                                                                           class="form-control" name="sgst"
                                                                           placeholder="Enter SGST Rate"
-                                                                          value="{{profile.tax_detail.sgst}}">
+                                                                          value="{{profile.tax_detail.sgst|default:''}}">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -119,7 +119,7 @@
                                         <label>IGST Rate@%</label> <input type="text"
                                                                           class="form-control" name="igst"
                                                                           placeholder="Enter IGST Rate"
-                                                                          value="{{profile.tax_detail.igst}}">
+                                                                          value="{{profile.tax_detail.igst|default:''}}">
                                     </div>
                                 </div>
                             </div>
@@ -148,7 +148,7 @@
                                         <label>Phone Number</label> <input type="text"
                                                                            class="form-control" name="phone_number"
                                                                            placeholder="Enter Contact person's Phone No"
-                                                                           value="{{profile.contact.phone_number}}">
+                                                                           value="{{profile.contact.phone_number|default:''}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">

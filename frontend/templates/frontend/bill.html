@@ -13,9 +13,8 @@
                 {{ contact_detail.phone_number }}</br></br></td>
 </tr>
 
-
 <tr><td colspan = "5" style="border-bottom:1px solid #999999;text-align:right;"><b>GSTIN:</b></td>
-        <td colspan="5">{{ company.gst }}</td>
+        <td colspan="5" style="border-bottom:1px solid #999999;">{{ company.gst }}</td>
 </tr>
 <tr><td colspan = "10" align="center" style="border-bottom:1px solid #999999;text-align:center;"><b>TAX INVOICE</b></br>(U/S-31(1)of CGST Act,2017 read with Rule 1) </td>
 </tr>
@@ -65,8 +64,8 @@
 </tr>
 <tr>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;">GSTIN/UIN</td>
-        <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;"> {{ client.gst }}</td>
-        <td colspan = "3" style="border-bottom:1px solid #999999;border-right:1px solid #999999;"></td>
+        <td colspan=2 style="border-bottom:1px solid #999999;"> {{ client.gst }}</td>
+        <td colspan = "2" style="border-bottom:1px solid #999999;border-right:1px solid #999999;"></td>
         <td colspan = "5" style="border-bottom:1px solid #999999;"></td>
 
 </tr>
@@ -108,7 +107,7 @@
 
 
 <tr>
-        <td colspan = "5"align="right"style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total: <b>{{ invoice.grand_total }}</b></td>
+        <td colspan="5" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total: <b>{{ invoice.grand_total }}</b></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
@@ -194,7 +193,7 @@
 
 <tr><td colspan = "10"style="border-bottom:1px solid #999999;"></br></td></tr>
 
-<tr><td colspan = "5" align="center" style="border-bottom:1px solid #999999;text-align:right;">
+<tr><td colspan = "5" align="center" style="text-align:right;">
         Email:</td><td colspan="5"> {{ contact_detail.email }} </td></tr>
 
 
