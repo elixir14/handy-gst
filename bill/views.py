@@ -108,6 +108,7 @@ def company_detail(request):
     }
     return JsonResponse(data)
 
+
 @login_required
 def client_detail(request):
     result = {
@@ -153,9 +154,6 @@ def client_detail(request):
 @login_required
 def bill_list(request, id=None):
     invoices = Invoice.objects.all()
-    # for invoice in invoices:
-    #     company = CompanyProfile.objects.get(pk=invoice.company_id)
-    #     invoice.company_id = company.company_name
     data = {'clients': invoices}
     return render(request, "frontend/invoice_list.html", context=data)
 
@@ -170,10 +168,6 @@ class ItemCreate(CreateView):
         self.object = None
         super(ItemCreate, self).__init__(**kwargs)
 
-    # def get_form_kwargs(self):
-    #     kwargs = super(ItemCreate, self).get_form_kwargs()
-    #     return kwargs
-
     def get_context_data(self, **kwargs):
         data = super(ItemCreate, self).get_context_data(user=self.request.user, **kwargs)
         print self.request.POST
@@ -185,21 +179,13 @@ class ItemCreate(CreateView):
         return data
 
     def form_valid(self, form):
-        print '0000000000000000000000000000'
         context = self.get_context_data()
-        print '1111111111111111111111111'
         items = context['items']
-        print items
-        if not form.is_valid():
-            print 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk'
-            print form.errors
         with transaction.atomic():
             self.object = form.save()
             if items.is_valid():
                 items.instance = self.object
                 items.save()
-            else:
-                print items.errors
         return super(ItemCreate, self).form_valid(form)
 
 
@@ -213,10 +199,6 @@ class ItemUpdate(UpdateView):
         self.object = None
         super(ItemUpdate, self).__init__(**kwargs)
 
-    def get_form_kwargs(self):
-        kwargs = super(ItemUpdate, self).get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
 
     def get_context_data(self, **kwargs):
         data = super(ItemUpdate, self).get_context_data(**kwargs)
