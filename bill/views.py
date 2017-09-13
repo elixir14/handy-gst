@@ -12,8 +12,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
-# from weasyprint import HTML, CSS
-from django.conf import settings
+from weasyprint import HTML, CSS
 from num2words import num2words
 
 
@@ -52,7 +51,7 @@ def generate_pdf(request, id=None):
         # Rendered
         # html_string = render_to_string('frontend/gst_bill.html', context=data)
         html_string = render_to_string('frontend/bill.html', context=data)
-        # html = HTML(string=html_string)
+        html = HTML(string=html_string)
         pdf_file = html.write_pdf()
         # pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//gst_bill_style.css')])
 
