@@ -1,6 +1,6 @@
 <html>
 <head>
-<title> {{ title }}</title>
+<title> {{ invoice.client.client_name }} - {{ invoice.invoice_no }}</title>
 </head>
 <body>
 <table border="0" width="800" style="border:1px solid #999999;font-size:11px;" cellspacing="0" class="border" >
@@ -8,9 +8,9 @@
      <td colspan = "10" align="center" style="border-bottom:1px solid #999999;text-align:center;">
                 {{ company.company_name }}
                 <br>
-                {{ company_address.address }}, {{company_address.city}}, {{company_address.state}}, {{company_address.zip }}
+                {{ company.address.address }}, {{company.address.city}}, {{company.address.state}}, {{company.address.zip }}
                 <br>
-                {{ contact_detail.phone_number }}</br></br></td>
+                {{ company.contact.phone_number }}</br></br></td>
 </tr>
 
 <tr><td colspan = "5" style="border-bottom:1px solid #999999;text-align:right;"><b>GSTIN:</b></td>
@@ -39,8 +39,8 @@
 </tr>
 <tr>
         <td colspan = "2"style="border-right:1px solid #999999;border-bottom:1px solid #999999;">State</td>
-        <td style="border-right:1px solid #999999;border-bottom:1px solid #999999;" width="100">{{ company_state.name }}</td>
-        <td colspan = "2"style="border-right:1px solid #999999;border-bottom:1px solid #999999;"width="10000">State Code: {{ company_state.code }}</td>
+        <td style="border-right:1px solid #999999;border-bottom:1px solid #999999;" width="100">{{ company.address.state.name }}</td>
+        <td colspan = "2"style="border-right:1px solid #999999;border-bottom:1px solid #999999;"width="10000">State Code: {{ company.address.state.code }}</td>
         <td colspan = "4"style="border-right:1px solid #999999;border-bottom:1px solid #999999;"></td>
         <td style="border-bottom:1px solid #999999;"width="100"></td>
 </tr>
@@ -64,7 +64,7 @@
 </tr>
 <tr>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;">GSTIN/UIN</td>
-        <td colspan=2 style="border-bottom:1px solid #999999;"> {{ client.gst }}</td>
+        <td colspan=2 style="border-bottom:1px solid #999999;"> {{ invoice.client_gst }}</td>
         <td colspan = "2" style="border-bottom:1px solid #999999;border-right:1px solid #999999;"></td>
         <td colspan = "5" style="border-bottom:1px solid #999999;"></td>
 
@@ -72,10 +72,10 @@
 <tr>
         <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;">State</td>
         <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;"> {{ invoice.billing_state }}</td>
-        <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">State Code:-  {{ invoice.billing_state_code }}</td>
+        <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">Code: {{ invoice.billing_state_code }}</td>
         <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">State</td>
         <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">{{ invoice.shipping_state }}</td>
-        <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;">State Code:-  {{ invoice.shipping_state_code }}</td>
+        <td style="border-bottom:1px solid #999999;border-right:1px solid #999999;">Code: {{ invoice.shipping_state_code }}</td>
 
 </tr>
   <tr><td colspan = "10"style="border-bottom:1px solid #999999;"><br /></td></tr>
@@ -107,14 +107,13 @@
 
 
 <tr>
-        <td colspan="5" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total: <b>{{ invoice.grand_total }}</b></td>
+        <td colspan="4" style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
+        <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total</td>
+        <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"><b>{{ total.quantity }}</b></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
+        <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"><b>{{ total.value }}</b></td>
         <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
-        <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
-        <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
-        <td style="border-bottom:1px solid #999999;"></td>
-
-
+        <td style="border-right:1px solid #999999; border-bottom:1px solid #999999;"><b>{{ total.tax_value }}</b></td>
 </tr>
 <tr>
         <td colspan = "5"style="border-right:1px solid #999999; border-bottom:1px solid #999999;"></td>
@@ -122,28 +121,28 @@
 
 </tr>
 <tr>
-        <td colspan = "7"style="border-right:1px solid #999999;">Total Invoice Value in Words: <b>{{ total_in_words }}</b></td>
+        <td colspan = "7"style="border-right:1px solid #999999;">Total in Words: <b>{{ total_in_words }}</b></td>
         <td colspan = "2"style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Total Value Before Tax(Rs.)</td>
-        <td  style=" border-bottom:1px solid #999999;">{{ invoice.total }}</td>
+        <td  style=" border-bottom:1px solid #999999;">{{ total.tax_value }}</td>
 
 </tr>
 <tr>
         <td colspan = "7"style="border-right:1px solid #999999;"></td>
-        <td colspan = "2" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Add CGST % On T.V.</td>
-        <td colspan = "1" style="border-bottom:1px solid #999999;">{{ invoice.cgst }}</td>
+        <td colspan = "2" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Add CGST @ {{ invoice.cgst }}% On T.V.</td>
+        <td colspan = "1" style="border-bottom:1px solid #999999;">{{ invoice.cgst_total }}</td>
 
 </tr>
 <tr>
         <td colspan = "7" style="border-right:1px solid #999999;border-bottom:1px solid #999999;"></td>
-        <td colspan = "2" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Add SGST % On T.V.</td>
-        <td colspan = "1" style="border-bottom:1px solid #999999;">{{ invoice.sgst }}</td>
+        <td colspan = "2" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Add SGST @ {{ invoice.sgst }}% On T.V.</td>
+        <td colspan = "1" style="border-bottom:1px solid #999999;">{{ invoice.sgst_total }}</td>
 
 </tr>
 <tr>
         <td colspan = "7"style="border-right:1px solid #999999;border-bottom:1px solid #999999;">
                 {% if invoice.remarks %}Remarks:- {{ invoice.remarks}} {% else %} Remarks: Notification number availed if any. {% endif %}</td>
-        <td colspan = "2" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Add IGST % On T.V.</td>
-        <td colspan = "1"style="border-bottom:1px solid #999999;" >{{ invoice.igst }}</td>
+        <td colspan = "2" style="border-right:1px solid #999999; border-bottom:1px solid #999999;">Add IGST @ {{ invoice.igst }}% On T.V.</td>
+        <td colspan = "1"style="border-bottom:1px solid #999999;" >{{ invoice.igst_total }}</td>
 
 </tr>
 <tr>
@@ -153,8 +152,7 @@
 
 </tr>
 <tr>
-        <td colspan = "5"align="center"style="border-right:1px solid #999999;">Bank Details: {{ bank_detail.bank_name }}
-                <br />Bank Account Number:  {{ bank_detail.account_number }}</td>
+        <td colspan = "5"align="center"style="border-right:1px solid #999999;">Bank Account Number:  {{ invoice.account_number }}</td>
         <td colspan = "2" style="border-right:1px solid #999999;"></td>
         <td colspan = "2"style="border-right:1px solid #999999;border-bottom:1px solid #999999;" >Total Value After Tax(Rs.)</td>
         <td style="border-bottom:1px solid #999999;">{{ invoice.grand_total }}</td>
@@ -162,7 +160,7 @@
 
 </tr>
 <tr>
-        <td colspan = "5"style="border-right:1px solid #999999;border-bottom:1px solid #999999;">Bank Branch: {{ bank_detail.ifsc }}</td>
+        <td colspan = "5"style="border-right:1px solid #999999;border-bottom:1px solid #999999;">Bank Branch: {{ invoice.ifsc }}</td>
         <td colspan = "2" style="border-right:1px solid #999999;" ></td>
         <td colspan = "2" style="border-right:1px solid #999999;border-bottom:1px solid #999999;" >GST Payble On Reverse Charge</td>
         <td style="border-bottom:1px solid #999999;"></td>
@@ -171,7 +169,7 @@
 
 <tr>
         <th colspan = "1"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">PAN NO:</th>
-        <td colspan = "4"style="border-bottom:1px solid #999999;border-right:1px solid #999999;" >{{ tax_detail.pan }}</td>
+        <td colspan = "4"style="border-bottom:1px solid #999999;border-right:1px solid #999999;" >{{ invoice.pan }}</td>
         <td colspan = "2" style="border-right:1px solid #999999;"></td>
         <td colspan = "3">for,</td>
 
@@ -180,21 +178,17 @@
 </tr>
 <tr>
 
-        <th colspan = "5" align="center"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">Terms And Condition <br /> {{ invoice.terms }}</th>
-        <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;" align="center"></br></br></br>(common seal)</td>
+        <td colspan = "5" align="center"style="border-bottom:1px solid #999999;border-right:1px solid #999999;">Terms And Condition <br /> {{ invoice.terms }}</td>
+        <td colspan = "2"style="border-bottom:1px solid #999999;border-right:1px solid #999999;" align="center">(common seal)</td>
         <td colspan = "3"style="border-bottom:1px solid #999999;" align="center"></br> {% if  invoice.authorised_signatory %}
                      {{ invoice.authorised_signatory }}
-                  {% else %}
-                     {{ contact_detail.first_name}} {{ contact_detail.last_name }}
                   {% endif %}
-                </br>Authorised Representative</td>
+                <br />Authorised Representative</td>
 
 </tr>
 
-<tr><td colspan = "10"style="border-bottom:1px solid #999999;"></br></td></tr>
-
 <tr><td colspan = "5" align="center" style="text-align:right;">
-        Email:</td><td colspan="5"> {{ contact_detail.email }} </td></tr>
+        Email:</td><td colspan="5"> {{ company.contact.email }} </td></tr>
 
 
 </table>

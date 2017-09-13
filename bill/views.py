@@ -21,13 +21,7 @@ def generate_pdf(request, id=None):
     if id:
         invoice_object = get_object_or_404(Invoice, pk=id)
         item_object = Item.objects.filter(invoice_id=invoice_object.id)
-        company_object = CompanyProfile.objects.get(pk=invoice_object.company_id)
-        client_object = ClientProfile.objects.get(pk=invoice_object.client_id)
-        bank_object = Bank.objects.get(id=company_object.bank_detail_id)
-        tax_object = Tax.objects.get(id=company_object.tax_detail_id)
-        address_object = Address.objects.get(pk=company_object.address_id)
-        state_object = State.objects.get(id=address_object.state_id)
-        contact_object = Contact.objects.get(pk=company_object.contact_id)
+
         total = {'quantity': 0, 'rate': 0, 'value': 0, 'discount': 0, 'tax_value': 0}
         for item in item_object:
             total['quantity'] += item.quantity
@@ -36,18 +30,12 @@ def generate_pdf(request, id=None):
             total['discount'] += item.discount
             total['tax_value'] += item.tax_value
         data = {'invoice': invoice_object,
-                'company': company_object,
-                'client': client_object,
-                'company_address': address_object,
-                'company_state': state_object,
-                'bank_detail': bank_object,
-                'tax_detail': tax_object,
-                'contact_detail': contact_object,
+                'company': invoice_object.company,
                 'items': item_object,
                 'total': total,
                 'total_in_words': num2words(invoice_object.grand_total, lang='en').capitalize(),
-                'title': invoice_object.invoice_no
         }
+        return render(request, 'frontend/bill.html', context=data)
         # Rendered
         # html_string = render_to_string('frontend/gst_bill.html', context=data)
         html_string = render_to_string('frontend/bill.html', context=data)
@@ -170,7 +158,6 @@ class ItemCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         data = super(ItemCreate, self).get_context_data(user=self.request.user, **kwargs)
-        print self.request.POST
 
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST)
