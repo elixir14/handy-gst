@@ -12,7 +12,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.template.loader import render_to_string
-from weasyprint import HTML, CSS
+# from weasyprint import HTML, CSS
 from django.conf import settings
 from num2words import num2words
 
@@ -52,7 +52,7 @@ def generate_pdf(request, id=None):
         # Rendered
         # html_string = render_to_string('frontend/gst_bill.html', context=data)
         html_string = render_to_string('frontend/bill.html', context=data)
-        html = HTML(string=html_string)
+        # html = HTML(string=html_string)
         pdf_file = html.write_pdf()
         # pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//gst_bill_style.css')])
 
@@ -63,61 +63,100 @@ def generate_pdf(request, id=None):
     else:
         return HttpResponse("No Invoice")
 
+
 @login_required
 def company_detail(request):
-    company_id = request.GET['id_company']
-    company_object = CompanyProfile.objects.get(pk=company_id)
-    clients = []
-    client_object = ClientProfile.objects.filter(company_id=company_object.id)
-    for client in client_object:
-        clients.append(dict(id=client.id, value=client.client_name))
-    bank_detail = Bank.objects.get(id=company_object.bank_detail_id)
-    tax_detail = Tax.objects.get(id=company_object.tax_detail_id)
-    data = {
-        'results': {
-            "remarks": company_object.remarks,
-            "terms": company_object.terms,
-            "authorised_signatory": company_object.authorised_signatory,
-            "account_number": bank_detail.account_number,
-            "ifsc": bank_detail.ifsc,
-            "pan": tax_detail.pan,
-            "clients": clients,
-            "cgst": tax_detail.cgst,
-            "sgst": tax_detail.sgst,
-            "igst": tax_detail.igst
+    result = {
+            "remarks": "",
+            "terms": "",
+            "authorised_signatory": "",
+            "account_number": "",
+            "ifsc": "",
+            "pan": "",
+            "clients": [],
+            "cgst": 0.00,
+            "sgst": 0.00,
+            "igst": 0.00
         }
+    try:
+        company_id = request.GET['id_company']
+        company_object = CompanyProfile.objects.get(pk=company_id)
+        result["remarks"] = company_object.remarks
+        result["terms"] = company_object.terms
+        result["authorised_signatory"] = company_object.authorised_signatory
+
+        clients = []
+        client_object = ClientProfile.objects.filter(company_id=company_object.id)
+        for client in client_object:
+            clients.append(dict(id=client.id, value=client.client_name))
+        result["clients"] = clients
+
+        bank_detail = company_object.bank_detail if company_object.bank_detail else None
+        tax_detail = company_object.tax_detail if company_object.tax_detail else None
+
+        result["account_number"] = bank_detail.account_number if bank_detail else ""
+        result["ifsc"] = bank_detail.ifsc if bank_detail else ""
+        result["pan"] = tax_detail.pan if tax_detail else ""
+
+        result["cgst"] = tax_detail.cgst if tax_detail else 0.00
+        result["sgst"] = tax_detail.sgst if tax_detail else 0.00
+        result["igst"] = tax_detail.igst if tax_detail else 0.00
+    except:
+        pass
+
+    data = {
+        'results': result
     }
     return JsonResponse(data)
 
 @login_required
 def client_detail(request):
-    client_id = request.GET['id_client']
-    client_object = ClientProfile.objects.get(pk=client_id)
-    billing_address_object = Address.objects.get(pk=client_object.billing_address_id)
-    shipping_address_object = Address.objects.get(pk=client_object.shipping_address_id)
-    billing_state_object = State.objects.get(pk=billing_address_object.state_id)
-    shipping_state_object = State.objects.get(pk=shipping_address_object.state_id)
+    result = {
+                "recipient": "",
+                "gst": "",
+                "billing_address": "",
+                "billing_state": "",
+                "billing_state_code": "",
+                "shipping_address": "",
+                "shipping_state": "",
+                "shipping_state_code": ""
+    }
+    try:
+        client_id = request.GET['id_client']
+        client_object = ClientProfile.objects.get(pk=client_id)
+        result["recipient"] = client_object.client_name
+        result["gst"] = client_object.gst
+        try:
+            billing_address_object = Address.objects.get(pk=client_object.billing_address_id)
+            billing_state_object = billing_address_object.state
+            result["billing_address"] = billing_address_object.address
+            result["billing_state"] = billing_state_object.name if billing_state_object else ""
+            result["billing_state_code"] = billing_state_object.code if billing_state_object else ""
+        except Address.DoesNotExist:
+            pass
+
+        try:
+            shipping_address_object = Address.objects.get(pk=client_object.shipping_address_id)
+            shipping_state_object = shipping_address_object.state
+            result["shipping_address"] = shipping_address_object.address
+            result["shipping_state"] = shipping_state_object.name if shipping_state_object else ""
+            result["shipping_state_code"] = shipping_state_object.code if shipping_state_object else ""
+        except Address.DoesNotExist:
+            pass
+    except Exception, ex:
+        pass
     data = {
-        'results': {
-            'recipient': client_object.client_name,
-            "gst": client_object.gst,
-            "billing_address": billing_address_object.address,
-            "billing_state": billing_state_object.name,
-            "billing_state_code": billing_state_object.code,
-            "shipping_address": shipping_address_object.address,
-            "shipping_state": shipping_state_object.name,
-            "shipping_state_code": shipping_state_object.code,
-        }
+        'results': result
     }
     return JsonResponse(data)
 
+
 @login_required
 def bill_list(request, id=None):
-    # invoices = Invoice.objects.for_user(user=request.user)
-    invoices = Invoice.objects.filter(company__customer__user=request.user)
-    for invoice in invoices:
-        company = CompanyProfile.objects.get(pk=invoice.company_id)
-        invoice.company_id = company.company_name
+    invoices = Invoice.objects.all()
+    # for invoice in invoices:
+    #     company = CompanyProfile.objects.get(pk=invoice.company_id)
+    #     invoice.company_id = company.company_name
     data = {'clients': invoices}
     return render(request, "frontend/invoice_list.html", context=data)
 
@@ -132,13 +171,13 @@ class ItemCreate(CreateView):
         self.object = None
         super(ItemCreate, self).__init__(**kwargs)
 
-    def get_form_kwargs(self):
-        kwargs = super(ItemCreate, self).get_form_kwargs()
-        kwargs["user"] = self.request.user
-        return kwargs
+    # def get_form_kwargs(self):
+    #     kwargs = super(ItemCreate, self).get_form_kwargs()
+    #     return kwargs
 
     def get_context_data(self, **kwargs):
         data = super(ItemCreate, self).get_context_data(user=self.request.user, **kwargs)
+        print self.request.POST
 
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST)
@@ -147,13 +186,21 @@ class ItemCreate(CreateView):
         return data
 
     def form_valid(self, form):
+        print '0000000000000000000000000000'
         context = self.get_context_data()
+        print '1111111111111111111111111'
         items = context['items']
+        print items
+        if not form.is_valid():
+            print 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkk'
+            print form.errors
         with transaction.atomic():
             self.object = form.save()
             if items.is_valid():
                 items.instance = self.object
                 items.save()
+            else:
+                print items.errors
         return super(ItemCreate, self).form_valid(form)
 
 
@@ -189,6 +236,7 @@ class ItemUpdate(UpdateView):
                 items.instance = self.object
                 items.save()
         return super(ItemUpdate, self).form_valid(form)
+
 
 @login_required
 def bill_delete(request, id):

@@ -12,12 +12,12 @@ from customer.models import State
 
 class InvoiceForm(ModelForm):
     def __init__(self, *args, **kwargs):
-        for item in ['company', 'billing_state', 'shipping_state']:
+        for item in ['company', 'client', 'billing_state', 'shipping_state']:
             if item in kwargs.keys():
                 kwargs.pop(item)
-        user = kwargs.pop('user')
         super(InvoiceForm, self).__init__(*args, **kwargs)
-        self.fields['company'].queryset = CompanyProfile.objects.filter(customer__user=user)
+        self.fields['company'].queryset = CompanyProfile.objects.all().order_by('company_name')
+        self.fields['client'].queryset = ClientProfile.objects.all().order_by('client_name')
         self.fields['billing_state'].choices = tuple([("", "-- Select State --")] +
                                                      [(state.name, state.name)for state in State.objects.all()])
         self.fields['shipping_state'].choices = tuple([("", "-- Select State --")] +
@@ -25,7 +25,7 @@ class InvoiceForm(ModelForm):
 
     company = forms.ModelChoiceField(queryset=CompanyProfile.objects.none(),  empty_label="-- Select Company --",
                                      widget=forms.Select(attrs={'class': 'form-control'}))
-    client = forms.ModelChoiceField(queryset=ClientProfile.objects.all(), empty_label="-- Select Client --",
+    client = forms.ModelChoiceField(queryset=ClientProfile.objects.none(), empty_label="-- Select Client --",
                                     widget=forms.Select(attrs={'class':'form-control'}))
     client_gst = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True, label='GSTIN / UIN')
     invoice_no = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}), required=True)

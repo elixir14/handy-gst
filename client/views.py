@@ -7,16 +7,18 @@ from .models import CompanyProfile
 from .forms import ClientProfileForm
 from customer.models import State
 from client.models import ClientProfile
-from django.contrib import messages
+from django.db.models import Value as V
+from django.db.models.functions import Concat
 
 
 @login_required
 def client_profile(request):
-    companies = CompanyProfile.objects.filter(customer__user=request.user)
+    companies = CompanyProfile.objects.get_display()
     state = State.objects.all().order_by('name')
     if request.method == 'POST':
         # print request.POST
         client_form = ClientProfileForm(request.POST or None)
+
         contact_form = EditContactForm(request.POST or None)
         addresses = {"shipping": {}, "billing": {}}
         for type in addresses.keys():
@@ -44,13 +46,14 @@ def client_profile(request):
             return HttpResponseRedirect("/client/list/")
     else:
         client_form = ClientProfileForm()
+
     data = {'form': client_form, 'companies': companies, 'states': state}
     return render(request, 'frontend/client_profile.html', data)
 
 
 @login_required
 def update_client_profile(request, id):
-    companies = CompanyProfile.objects.filter(customer__user=request.user)
+    companies = CompanyProfile.objects.all().order_by('company_name')
     state = State.objects.all().order_by('name')
     profile = get_object_or_404(ClientProfile, pk=id)
     if request.method == 'POST':
@@ -58,6 +61,7 @@ def update_client_profile(request, id):
         client_form = ClientProfileForm(request.POST or None, instance=profile)
         contact_form = EditContactForm(request.POST or None, instance=profile.contact)
         addresses = {"shipping": {}, "billing": {}}
+
         for type in addresses.keys():
             for item in ['address', 'city', 'state', 'zip']:
                 addresses[type][item] = request.POST[type + "_" + item]
@@ -97,8 +101,8 @@ def client_view(request):
 
 
 @login_required
-def client_remove(request, id):
-    client = ClientProfile.objects.get(pk=id)
+def client_remove(request, client_id):
+    client = ClientProfile.objects.get(pk=client_id)
     client.delete()
     clients = ClientProfile.objects.filter(company__customer__user=request.user)
     data = {

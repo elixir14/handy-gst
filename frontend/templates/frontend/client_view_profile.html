@@ -23,10 +23,8 @@
                                     <th>Name</th>
                                     <th>GST Number</th>
                                     <th>Company</th>
-                                    <th>First Name</th>
-                                    <th>Last Name</th>
+                                    <th>State</th>
                                     <th>Phone Number</th>
-                                    <th>Email Address</th>
                                 </thead>
                                 <tbody>
                                 {% for client in clients %}
@@ -41,16 +39,14 @@
                                     <td>{{client.client_name}}</td>
                                     <td>{{client.gst}}</td>
                                     <td>{{client.company}}</td>
-                                    <td>{{client.contact.first_name}}</td>
-                                    <td>{{client.contact.last_name}}</td>
+                                    <td>{{client.billing_address.state}}</td>
                                     <td>{{client.contact.phone_number}}</td>
-                                    <td>{{client.contact.email}}</td>
                                 </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
                             {% else %}
-                            <p>No Client in the database</p>
+                            <p>No Client Created</p>
                             {% endif %}
                         </div>
 

@@ -32,7 +32,7 @@
                                         <label name="company">Select Company</label>
                                         <select name="company" class="form-control">
                                             {% for company in companies %}
-                                                <option {% if company.id == profile.company.id %} selected {% endif %} value="{{company.id}}">{{company.company_name}}</option>
+                                                <option {% if company.id == profile.company.id %} selected {% endif %} value="{{company.id}}">{{company.display_name}}</option>
                                             {% endfor %}
                                         </select>
                                     </div>
@@ -48,82 +48,6 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Client Billing Address</label>
-                                        <textarea rows="5" class="form-control" name="billing_address"
-                                                  placeholder="Enter Billing Address to print on bill">{{profile.billing_address.address}}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>City</label> <input type="text"
-                                                                   class="form-control" name="billing_city"
-                                                                   placeholder="Enter City"
-                                                                   value="{{profile.billing_address.city}}">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>State</label>
-                                        <select name="billing_state" class="form-control">
-                                            {% for state in states %}
-                                            <option {% if state.id == profile.billing_address.state.id %} selected {% endif %} value="{{state.id}}">{{state.name}}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Zip</label> <input type="text"
-                                                                  class="form-control" name="billing_zip"
-                                                                  placeholder="Enter Zip"
-                                                                  value="{{profile.billing_address.zip}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label>Client Shipping Address</label>
-                                        <textarea rows="5" class="form-control" name="shipping_address"
-                                                  placeholder="Enter Shipping Address to print on bill">{{profile.shipping_address.address}}</textarea>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>City</label> <input type="text"
-                                                                   class="form-control" name="shipping_city"
-                                                                   placeholder="Enter City"
-                                                                   value="{{profile.shipping_address.city}}">
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>State</label>
-                                        <select name="shipping_state" class="form-control">
-                                            {% for state in states %}
-                                            <option {% if state.id == profile.shipping_address.state.id %} selected {% endif %} value="{{state.id}}">{{state.name}}
-                                            </option>
-                                            {% endfor %}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <label>Zip</label> <input type="text"
-                                                                  class="form-control" name="shipping_zip"
-                                                                  placeholder="Enter Zip"
-                                                                  value="{{profile.shipping_address.zip}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
                                     <div class="form-group">
                                         <label>GST Number</label> <input type="text"
                                                                          class="form-control" name="gst"
@@ -168,12 +92,93 @@
                                     </div>
                                 </div>
                             </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Billing Address</label>
+                                        <textarea rows="5" class="form-control" name="billing_address"
+                                                  placeholder="Enter Billing Address to print on bill">{{profile.billing_address.address}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>City</label> <input type="text"
+                                                                   class="form-control" name="billing_city"
+                                                                   placeholder="Enter City"
+                                                                   value="{{profile.billing_address.city}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>State</label>
+                                        <select name="billing_state" required class="form-control">
+                                            <option value=""> -- Select State -- </option>
+                                            {% for state in states %}
+                                            <option {% if state.id == profile.billing_address.state.id %} selected {% endif %} value="{{state.id}}">{{state.name}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Zip</label> <input type="text"
+                                                                  class="form-control" name="billing_zip"
+                                                                  placeholder="Enter Zip"
+                                                                  value="{{profile.billing_address.zip}}">
+                                    </div>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label>Shipping Address</label>
+                                        <textarea rows="5" class="form-control" name="shipping_address"
+                                                  placeholder="Enter Shipping Address to print on bill">{{profile.shipping_address.address}}</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>City</label> <input type="text"
+                                                                   class="form-control" name="shipping_city"
+                                                                   placeholder="Enter City"
+                                                                   value="{{profile.shipping_address.city}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>State</label>
+                                        <select name="shipping_state" class="form-control">
+                                            <option value=""> -- Select State -- </option>
+                                            {% for state in states %}
+                                            <option {% if state.id == profile.shipping_address.state.id %} selected {% endif %} value="{{state.id}}">{{state.name}}
+                                            </option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Zip</label> <input type="text"
+                                                                  class="form-control" name="shipping_zip"
+                                                                  placeholder="Enter Zip"
+                                                                  value="{{profile.shipping_address.zip}}">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label>Remarks</label>
                                         <textarea rows="5" class="form-control" name="remarks"
-                                                  placeholder="Enter Remarks Here">{{profile.remarks}}</textarea>
+                                                  placeholder="Enter Remarks to print on bill">{{profile.remarks}}</textarea>
                                     </div>
                                 </div>
                             </div>

@@ -1,21 +1,19 @@
 from __future__ import unicode_literals
 
 from django.db import models
-from company.models import CompanyProfile
+
 from client.models import ClientProfile
-from common.Sample import get_current_user
+from common.login_user import get_current_user
+from company.models import CompanyProfile
 
 
 class InvoiceManager(models.Manager):
     def get_queryset(self):
         return super(InvoiceManager, self).get_queryset().filter(company__customer__user=get_current_user())
 
-    def for_user(self, user):
-        return super(InvoiceManager, self).get_queryset().filter(company__customer__user=user)
-
 
 class Invoice(models.Model):
-    # objects = InvoiceManager()
+    objects = InvoiceManager()
     company = models.ForeignKey(CompanyProfile, on_delete=models.CASCADE)
     client = models.ForeignKey(ClientProfile, on_delete=models.CASCADE)
     client_gst = models.CharField(max_length=50, null=False, blank=False)

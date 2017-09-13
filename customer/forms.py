@@ -43,7 +43,7 @@ class EditAddressForm(forms.ModelForm):
     address = forms.Textarea()
     city = forms.CharField(max_length=100, required=False, help_text='Optional.')
     zip = forms.CharField(max_length=50, required=False, help_text='Optional.')
-    state = forms.ModelChoiceField(queryset=State.objects.all())
+    state = forms.ModelChoiceField(queryset=State.objects.all(), required=False)
 
     class Meta:
         model = Address

@@ -33,10 +33,28 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="form-group">
-                                        <label>Company Name</label> <input type="text"
+                                        <label>Company Name</label> <input type="text" required
                                                                            class="form-control" name="company_name"
                                                                            placeholder="Enter Company Name"
                                                                            value="{{profile.company_name}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>GST Number</label> <input type="text" required
+                                                                         class="form-control" name="gst"
+                                                                         placeholder="Enter GST No"
+                                                                         value="{{profile.gst}}">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>PAN Number</label> <input type="text"
+                                                                         class="form-control" name="pan"
+                                                                         placeholder="Enter PAN No"
+                                                                         value="{{profile.tax_detail.pan}}">
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +80,7 @@
                                     <div class="form-group">
                                         <label>State</label>
                                         <select name="state" class="form-control">
-                                            <option value="-1"> -- Select State -- </option>
+                                            <option value=""> -- Select State -- </option>
                                             {% for state in states %}
                                             <option {% if state.id == profile.address.state.id %} selected {% endif %} value="{{state.id}}">{{state.name}}
                                             </option>
@@ -79,24 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>GST Number</label> <input type="text"
-                                                                         class="form-control" name="gst"
-                                                                         placeholder="Enter GST No"
-                                                                         value="{{profile.gst}}">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label>PAN Number</label> <input type="text"
-                                                                         class="form-control" name="pan"
-                                                                         placeholder="Enter PAN No"
-                                                                         value="{{profile.tax_detail.pan}}">
-                                    </div>
-                                </div>
-                            </div>
+
                             <div class="row">
                                 <div class="col-md-4">
                                     <div class="form-group">

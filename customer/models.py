@@ -24,7 +24,7 @@ class Address(HandyBase):
     address = models.TextField(default='', null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     zip = models.CharField(max_length=50, null=True, blank=True)
-    state = models.ForeignKey(State)
+    state = models.ForeignKey(State, null=True)
 
     class Meta:
         db_table = "gst_address"

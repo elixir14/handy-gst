@@ -45,7 +45,7 @@ def company_profile(request):
 
 @login_required
 def company_view(request):
-    companies = CompanyProfile.objects.filter(customer__user=request.user)
+    companies = CompanyProfile.objects.all()
     data = {
         'profile': companies
     }
@@ -67,7 +67,6 @@ def company_remove(request, id):
 def company_edit(request, id=None):
     state = State.objects.all().order_by('name')
     profile = get_object_or_404(CompanyProfile, pk=id)
-    print profile.__dict__
     if request.method == 'POST':
         company_form = CompanyProfileForm(request.POST or None, instance=profile)
         contact_form = EditContactForm(request.POST or None, instance=profile.contact)
