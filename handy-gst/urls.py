@@ -18,6 +18,12 @@ from django.conf.urls import url, include
 from django.conf.urls.static import static
 from django.contrib import admin
 
+
+from frontend.views import page_not_found, internal_server_error
+
+handler404 = page_not_found
+handler500 = internal_server_error
+
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('frontend.urls', namespace='frontend')),

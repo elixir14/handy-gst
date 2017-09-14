@@ -60,3 +60,11 @@ def dashboard(request):
 def logout(request):
     auth_logout(request)
     return render(request, "frontend/login.html", {"message": "You successfully logged out"})
+
+
+def page_not_found(request):
+    return render(request, "frontend/404.html")
+
+
+def internal_server_error(request):
+    return render(request, "frontend/500.html")

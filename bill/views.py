@@ -15,9 +15,13 @@ from django.template.loader import render_to_string
 from weasyprint import HTML, CSS
 from num2words import num2words
 
+import logging
+
+logger = logging.getLogger(__name__)
 
 @login_required
 def generate_pdf(request, id=None):
+    logger.info("------ Request for Generating PDF --------")
     if id:
         invoice_object = get_object_or_404(Invoice, pk=id)
         item_object = Item.objects.filter(invoice_id=invoice_object.id)
@@ -53,6 +57,7 @@ def generate_pdf(request, id=None):
 
 @login_required
 def company_detail(request):
+    logger.info("----------- Request for getting Company Details -------------")
     result = {
             "remarks": "",
             "terms": "",
@@ -89,6 +94,7 @@ def company_detail(request):
         result["sgst"] = tax_detail.sgst if tax_detail else 0.00
         result["igst"] = tax_detail.igst if tax_detail else 0.00
     except:
+        logger.error("----------- Error Caught -------------")
         pass
 
     data = {
@@ -99,6 +105,7 @@ def company_detail(request):
 
 @login_required
 def client_detail(request):
+    logger.info("----------- Request for getting Client Details -------------")
     result = {
                 "recipient": "",
                 "gst": "",
@@ -141,7 +148,8 @@ def client_detail(request):
 
 @login_required
 def bill_list(request, id=None):
-    invoices = Invoice.objects.all()
+    logger.info("------- Request for Getting Invoices -------")
+    invoices = Invoice.objects.filter(company__customer__user=request.user)
     data = {'clients': invoices}
     return render(request, "frontend/invoice_list.html", context=data)
 
@@ -157,8 +165,8 @@ class ItemCreate(CreateView):
         super(ItemCreate, self).__init__(**kwargs)
 
     def get_context_data(self, **kwargs):
+        logger.info("------- Request for Create Invoice  ----------")
         data = super(ItemCreate, self).get_context_data(user=self.request.user, **kwargs)
-
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST)
         else:
@@ -173,6 +181,8 @@ class ItemCreate(CreateView):
             if items.is_valid():
                 items.instance = self.object
                 items.save()
+            else:
+                logger.error("----- Error in ItemCreate Form... %s ----" % form.errors)
         return super(ItemCreate, self).form_valid(form)
 
 
@@ -186,8 +196,8 @@ class ItemUpdate(UpdateView):
         self.object = None
         super(ItemUpdate, self).__init__(**kwargs)
 
-
     def get_context_data(self, **kwargs):
+        logger.info("------- Request for Updating Invoice ----------")
         data = super(ItemUpdate, self).get_context_data(**kwargs)
         if self.request.POST:
             data['items'] = ItemFormSet(self.request.POST, instance=self.object)
@@ -203,16 +213,20 @@ class ItemUpdate(UpdateView):
             if items.is_valid():
                 items.instance = self.object
                 items.save()
+            else:
+                logger.error("----- Error in ItemUpdate Form... %s ----" % form.errors)
         return super(ItemUpdate, self).form_valid(form)
 
 
 @login_required
 def bill_delete(request, id):
+    logger.info("------- Request for Removing Invoice(%s)  ----------" % id)
     # invoice = Invoice.objects.for_user(user=request.user).get(pk=id)
     invoices = Invoice.objects.filter(company__customer__user=request.user)
     for invoice in invoices:
         if str(invoice.id) == id:
             invoice.delete()
+    logger.info("------- Invoice(%s) removed successfully ----------" % id)
     # invoices = Invoice.objects.for_user(user=request.user)
     invoices = Invoice.objects.filter(company__customer__user=request.user)
     return render(request, "frontend/invoice_list.html", {'clients': invoices})
