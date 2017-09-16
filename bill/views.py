@@ -1,5 +1,6 @@
 from __future__ import unicode_literals, absolute_import
 
+from django.conf import settings
 from company.models import CompanyProfile
 from client.models import ClientProfile
 from django.db import transaction
@@ -33,19 +34,21 @@ def generate_pdf(request, id=None):
             total['value'] += item.value
             total['discount'] += item.discount
             total['tax_value'] += item.tax_value
+
         data = {'invoice': invoice_object,
                 'company': invoice_object.company,
                 'items': item_object,
+                'filler': range(10 - len(item_object) if len(item_object) < 10 else 0),
                 'total': total,
                 'total_in_words': num2words(invoice_object.grand_total, lang='en').capitalize(),
         }
-        return render(request, 'frontend/bill.html', context=data)
+        # return render(request, 'frontend/bill.html', context=data)
         # Rendered
         # html_string = render_to_string('frontend/gst_bill.html', context=data)
         html_string = render_to_string('frontend/bill.html', context=data)
         html = HTML(string=html_string)
         pdf_file = html.write_pdf()
-        # pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//gst_bill_style.css')])
+        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//bill_pdf.css')])
 
         # Creating http response
         response = HttpResponse(pdf_file, content_type='application/pdf;')
@@ -53,6 +56,27 @@ def generate_pdf(request, id=None):
         return response
     else:
         return HttpResponse("No Invoice")
+
+
+@login_required
+def state_code(request):
+    logger.info("----------- Request for getting State Code -------------")
+    result = {
+            "state_code": "NA",
+        }
+    try:
+        state_name = request.GET['state_name']
+        state = State.objects.filter(name=state_name)
+        if state:
+            result["state_code"] = state[0].code
+    except:
+        logger.error("----------- Error Caught -------------")
+        pass
+
+    data = {
+        'results': result
+    }
+    return JsonResponse(data)
 
 
 @login_required

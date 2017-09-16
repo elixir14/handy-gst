@@ -11,4 +11,6 @@ urlpatterns = [
     url(r'^edit/(?P<pk>[0-9]+)$', views.ItemUpdate.as_view(), name='bill_list'),
     url(r'^delete/(?P<id>[0-9]+)$', views.bill_delete, name='bill_delete'),
     url(r'^generate_pdf/(?P<id>[0-9]+)$', views.generate_pdf, name='generate_pdf'),
+    url(r'^add/state_code/$', views.state_code, name='state_code'),
+    url(r'^edit/state_code/$', views.state_code, name='state_code'),
 ]

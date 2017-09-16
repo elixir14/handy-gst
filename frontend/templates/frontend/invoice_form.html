@@ -76,6 +76,39 @@
         });
     });
 
+    $("#id_billing_state").change(function () {
+        $state_name = $(this).val();
+        $.ajax({
+            url: 'state_code/',
+            data: {
+              'state_name': $state_name
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.results) {
+                // console.log(data.results);
+                $("#id_billing_state_code").attr("value", data.results.state_code);
+              }
+            }
+        });
+    });
+
+    $("#id_shipping_state").change(function () {
+        $state_name = $(this).val();
+        $.ajax({
+            url: 'state_code/',
+            data: {
+              'state_name': $state_name
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.results) {
+                // console.log(data.results);
+                $("#id_shipping_state_code").attr("value", data.results.state_code);
+              }
+            }
+        });
+    });
 
      function Test()
      {

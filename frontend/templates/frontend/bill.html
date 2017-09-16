@@ -1,197 +1,235 @@
 <html>
 <head>
+        {% load staticfiles %}
 <title> {{ invoice.client.client_name }} - {{ invoice.invoice_no }}</title>
+
+<link href="{% static 'frontend/css/bill_pdf.css'%}" rel="stylesheet">
+
 </head>
 <body>
-<table border="1" width="800" style="border-collapse:collapse;font-size:11px; margin:auto" cellspacing="0" class="border" >
-<tr>
-     <td colspan = "10" align="center" style="text-align:center;">
-                {{ company.company_name }}
-                <br>
-                {{ company.address.address }}, {{company.address.city}}, {{company.address.state}}, {{company.address.zip }}
-                <br>
-                {{ company.contact.phone_number }}</br></br></td>
-</tr>
+<div class="main">
+        <table border="0" cellspacing="0" class="main" >
+                <tr>
+                     <td class="border" align="center">
+                        <div class="title">
+                                {{ company.company_name }}
+                        </div>
+                        <div>
+                                {{ company.address.address }}, {{company.address.city}}, {{company.address.state}}, {{company.address.zip }}
+                        </div>
+                        {{ company.contact.phone_number }}
+                     </td>
+                </tr>
 
-<tr><td colspan = "5" style="text-align:right;"><b>GSTIN:</b></td>
-        <td colspan="5" style="">{{ company.gst }}</td>
-</tr>
-<tr><td colspan = "10" align="center" style="text-align:center;"><b>TAX INVOICE</b></br>(U/S-31(1)of CGST Act,2017 read with Rule 1) </td>
-</tr>
+                <tr>
+                    <td class="border" >
+                            <div class="heading thirty right">GSTIN :</div>
+                            <div>{{ company.gst }}</div>
+                    </td>
 
-<tr>
-        <td colspan = "2" >Reverse charge</td>
-        <td colspan = "3" ></td>
-        <td colspan = "4" >Original For Recipient</td>
-        <td style="" width="100"></td>
-</tr>
-<tr>
-        <td colspan = "2" >Invoice No.</td>
-        <td colspan = "3" align="center"> {{ invoice.invoice_no }}</td>
-        <td colspan = "4" >Duplicate For Transporter</td>
-        <td style="" width="100"></td>
-</tr>
-<tr>
-        <td colspan = "2" >Invoice Date</td>
-        <td colspan = "3" >{{ invoice.invoice_date }}</td>
-        <td colspan = "4" >Triplicate For Supplier</td>
-        <td width="100" ></td>
-</tr>
-<tr>
-        <td colspan = "2">State</td>
-        <td  width="100">{{ company.address.state.name }}</td>
-        <td colspan = "2"width="10000">State Code: {{ company.address.state.code }}</td>
-        <td colspan = "4"></td>
-        <td style=""width="100"></td>
-</tr>
-<tr><td colspan = "10"style=""></br></td></tr>
+                </tr>
+                <tr>
+                    <td align="center" class="border" >
+                            <div class="title">TAX INVOICE</div>
+                            <div>(U/S-31(1)of CGST Act,2017 read with Rule 1)</div>
+                    </td>
 
-<tr>
-        <td colspan = "5"align="center">Detail Of Recipient/Billed To</td>
-        <td colspan = "5"align="center"style="">Detail Of Consignee/ Address Of Delivery/Shipped To</td>
+                </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="main">
+                <tr>
+                        <td class="small">Reverse charge</td>
+                        <td class="medium"></td>
+                        <td class="medium">Original For Recipient</td>
+                        <td></td>
+                </tr>
 
-</tr>
-<tr>
-        <td colspan = "5">{{ invoice.recipient }}</td>
-        <td colspan = "5"style="">{{ invoice.consignee }}</td>
+                <tr>
+                        <td>Invoice No.</td>
+                        <td align="center"> {{ invoice.invoice_no }}</td>
+                        <td>Duplicate For Transporter</td>
+                        <td></td>
+                </tr>
+                <tr>
+                        <td>Invoice Date</td>
+                        <td>{{ invoice.invoice_date }}</td>
+                        <td rowspan="2">Triplicate For Supplier</td>
+                        <td rowspan="2"></td>
+                </tr>
+                <tr>
+                        <td>State</td>
+                        <td>
+                                <div class="sixty">{{ company.address.state.name }}</div>
+                                <div>State Code: {{ company.address.state.code }} </div>
+                        </td>
+                </tr>
+                <tr><td colspan="4">&nbsp;</td> </tr>
+        </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="main">
+                <tr>
+                        <td class="fifty" align="center">Detail Of Recipient/Billed To</td>
+                        <td class="fifty" align="center">Detail Of Consignee/ Address Of Delivery/Shipped To</td>
+                </tr>
+                <tr>
+                        <td class="heading">{{ invoice.recipient }}</td>
+                        <td class="heading">{{ invoice.consignee }}</td>
+                </tr>
+                <tr>
+                        <td class="textarea">{{ invoice.billing_address }}</td>
+                        <td class="textarea" rowspan="2">{{ invoice.shipping_address }}</td>
+                </tr>
+                <tr>
+                        <td>
+                                <div class="small pull-left">GSTIN/UIN</div>
+                                <div class="heading lborder pull-left">{{ invoice.client_gst }}</div>
 
-</tr>
-<tr>
-        <td colspan = "5">{{ invoice.billing_address }}</br></td>
-</br>
-        <td colspan = "5">{{ invoice.shipping_address }}</br></td>
+                        </td>
+                </tr>
+                <tr>
+                        <td>
+                                <div class="small pull-left">State</div>
+                                <div class="lborder pull-left">{{ invoice.billing_state }}</div>
+                                <div class="lborder pull-right">State Code: {{ invoice.billing_state_code }} </div>
 
-</tr>
-<tr>
-        <td >GSTIN/UIN</td>
-        <td colspan=2 style=""> {{ invoice.client_gst }}</td>
-        <td colspan = "2" ></td>
-        <td colspan = "5" style=""></td>
+                        </td>
+                        <td>
+                                <div class="small pull-left">State</div>
+                                <div class="lborder pull-left">{{ invoice.shipping_state }}</div>
+                                <div class="lborder pull-right">State Code: {{ invoice.shipping_state_code }} </div>
+                        </td>
+                </tr>
+                <tr><td colspan = "2">&nbsp;</td></tr>
+        </table>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" class="main">
 
-</tr>
-<tr>
-        <td >State</td>
-        <td colspan = "2"> {{ invoice.billing_state }}</td>
-        <td colspan = "2">Code: {{ invoice.billing_state_code }}</td>
-        <td colspan = "2">State</td>
-        <td colspan = "2">{{ invoice.shipping_state }}</td>
-        <td >Code: {{ invoice.shipping_state_code }}</td>
+                <tr>
+                        <th width="20px">Sr No.</th>
+                        <th  >Description Of Goods/Services</th>
 
-</tr>
-  <tr><td colspan = "10"style=""><br /></td></tr>
-<tr>
-        <td  width="20" colspan="2" align="center">Sr No.</td>
-        <td align="center" >Description Of Goods /Services</td>
+                        <th width="80px">HSN ACS</th>
+                        <th  width="80px" >Quatity Code</th>
+                        <th width="80px">Qty</th>
+                        <th width="80px">Rate</th>
+                        <th width="80px">Value</th>
+                        <th width="80px">Less Discount</th>
+                        <th width="80px">Taxable value(Rs.)</th>
+                </tr>
+                {% for item in items %}
+                        <tr class="item">
+                                <td>{{ forloop.counter }}</td>
+                                <td >{{ item.description}}</td>
+                                <td >{{ item.hsn_code}}</td>
+                                <td >{{ item.quantity_code}}</td>
+                                <td class="right">{{ item.quantity|floatformat:0}}</td>
+                                <td class="right">{{ item.rate|floatformat:2}}</td>
+                                <td class="right"> {{ item.value|floatformat:2}}</td>
+                                <td class="right">{{ item.discount|floatformat:2}}</td>
+                                <td class="right"> {{ item.tax_value|floatformat:2}}</td>
+                        </tr>
+                {% endfor %}
+                {% for i in filler %}
+                        <tr class="item">
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                        </tr>
+                {% endfor %}
+                <tr>
+                        <td colspan="3"></td>
+                        <td class="right heading">Total</td>
+                        <td class="right heading">{{ total.quantity|floatformat:0 }}</td>
+                        <td class="right heading"></td>
+                        <td class="right heading">{{ total.value|floatformat:2 }}</td>
+                        <td></td>
+                        <td class="right heading">{{ total.tax_value|floatformat:2 }}</td>
+                </tr>
+                <tr>
+                        <td colspan = "4"></td>
+                        <td colspan = "5">Add Parking/Transportation Charges/Insurance</td>
 
-        <td width="80"align="center">HSN</br>ACS</td>
-        <td  width="80" align="center">Quatity</br>Code</td>
-        <td width="80"align="center">Qty</td>
-        <td width="80"align="center">Rate</td>
-        <td width="80"align="center">Value</td>
-        <td  align="center">Less Discount</td>
-        <td style="" align="center">Taxable value(Rs.)</td>
-</tr>
-        {% for item in items %}
-<tr>
-        <td colspan="2">{{ forloop.counter }}</td>
-        <td >{{ item.description}}</td>
-        <td >{{ item.hsn_code}}</td>
-        <td >{{ item.quantity_code}}</td>
-        <td >{{ item.quantity}}</td>
-        <td >{{ item.rate}}</td>
-        <td > {{ item.value}}</td>
-        <td >{{ item.discount}}</td>
-        <td style="" align="center"> {{ item.tax_value}}</td>
-</tr>
-        {% endfor %}
+                </tr>
+                <tr>
+                        <td colspan = "6" rowspan="3">Total in Words: <b>{{ total_in_words }}</b></td>
+                        <td colspan = "2" >Total Value Before Tax (Rs.)</td>
+                        <td class="right">{{ total.tax_value|floatformat:2 }}</td>
 
+                </tr>
+                <tr>
+                        <td colspan = "2">Add CGST @ {{ invoice.cgst }}% On T.V.</td>
+                        <td colspan = "1" class="right">{{ invoice.cgst_total|floatformat:2 }}</td>
 
-<tr>
-        <td colspan="4" style="border-right:1px solid #999999; "></td>
-        <td style="border-right:1px solid #999999; ">Total</td>
-        <td style="border-right:1px solid #999999; "><b>{{ total.quantity }}</b></td>
-        <td style="border-right:1px solid #999999; "></td>
-        <td style="border-right:1px solid #999999; "><b>{{ total.value }}</b></td>
-        <td style="border-right:1px solid #999999; "></td>
-        <td style="border-right:1px solid #999999; "><b>{{ total.tax_value }}</b></td>
-</tr>
-<tr>
-        <td colspan = "5"style="border-right:1px solid #999999; "></td>
-        <td colspan = "5" align="center"style="">Add Parking/Transportation Charges/Insurance</td>
+                </tr>
+                <tr>
+                        <td colspan = "2">Add SGST @ {{ invoice.sgst }}% On T.V.</td>
+                        <td colspan = "1" class="right">{{ invoice.sgst_total|floatformat:2 }}</td>
 
-</tr>
-<tr>
-        <td colspan = "7">Total in Words: <b>{{ total_in_words }}</b></td>
-        <td colspan = "2"style="border-right:1px solid #999999; ">Total Value Before Tax(Rs.)</td>
-        <td  style=" ">{{ total.tax_value }}</td>
+                </tr>
+                <tr>
+                        <td colspan = "6" rowspan="2"><span class="heading">Remarks:</span> {{ invoice.remarks}}</td>
+                        <td colspan = "2">Add IGST @ {{ invoice.igst }}% On T.V.</td>
+                        <td colspan = "1" class="right">{{ invoice.igst_total|floatformat:2 }}</td>
 
-</tr>
-<tr>
-        <td colspan = "7"></td>
-        <td colspan = "2" style="border-right:1px solid #999999; ">Add CGST @ {{ invoice.cgst }}% On T.V.</td>
-        <td colspan = "1" style="">{{ invoice.cgst_total }}</td>
+                </tr>
+                <tr>
+                        <td colspan = "2" >Tax Amount:GST(Rs.) </td>
+                        <td colspan = "1" class="right">{{ invoice.gst_amount|floatformat:2 }}</td>
 
-</tr>
-<tr>
-        <td colspan = "7" ></td>
-        <td colspan = "2" style="border-right:1px solid #999999; ">Add SGST @ {{ invoice.sgst }}% On T.V.</td>
-        <td colspan = "1" style="">{{ invoice.sgst_total }}</td>
-
-</tr>
-<tr>
-        <td colspan = "7">
-                {% if invoice.remarks %}Remarks:- {{ invoice.remarks}} {% else %} Remarks: Notification number availed if any. {% endif %}</td>
-        <td colspan = "2" style="border-right:1px solid #999999; ">Add IGST @ {{ invoice.igst }}% On T.V.</td>
-        <td colspan = "1"style="" >{{ invoice.igst_total }}</td>
-
-</tr>
-<tr>
-        <td colspan = "7"></td>
-        <td colspan = "2" >Tax Amount:GST(Rs.) </td>
-        <td colspan = "1"style="" >{{ invoice.gst_amount }}</td>
-
-</tr>
-<tr>
-        <td colspan = "5"align="center">Bank Account Number:  {{ invoice.account_number }}</td>
-        <td colspan = "2" ></td>
-        <td colspan = "2" >Total Value After Tax(Rs.)</td>
-        <td style="">{{ invoice.grand_total }}</td>
-
-
-</tr>
-<tr>
-        <td colspan = "5">Bank Branch: {{ invoice.ifsc }}</td>
-        <td colspan = "2"  ></td>
-        <td colspan = "2"  >GST Payble On Reverse Charge</td>
-        <td style=""></td>
-
-</tr>
-
-<tr>
-        <th colspan = "1">PAN NO:</th>
-        <td colspan = "4" >{{ invoice.pan }}</td>
-        <td colspan = "2" ></td>
-        <td colspan = "3">for,</td>
-
-
-
-</tr>
-<tr>
-
-        <td colspan = "5" align="center">Terms And Condition <br /> {{ invoice.terms }}</td>
-        <td colspan = "2" align="center">(common seal)</td>
-        <td colspan = "3"style="" align="center"></br> {% if  invoice.authorised_signatory %}
-                     {{ invoice.authorised_signatory }}
-                  {% endif %}
-                <br />Authorised Representative</td>
-
-</tr>
-
-<tr><td colspan = "5" align="center" style="text-align:right;">
-        Email:</td><td colspan="5"> {{ company.contact.email }} </td></tr>
+                </tr>
+                <tr>
+                        <td colspan = "2">Bank Account Number</td>
+                        <td colspan = "2" class="heading">{{ invoice.account_number }}</td>
+                        <td colspan = "2" rowspan="5" class="bottom" >(common seal)</td>
+                        <td colspan = "2" >Total Value After Tax(Rs.)</td>
+                        <td style="">{{ invoice.grand_total|floatformat:2 }}</td>
 
 
-</table>
+                </tr>
+                <tr>
+                        <td colspan = "2">Bank Branch</td>
+                        <td colspan = "2" class="heading">{{ invoice.ifsc }}</td>
+                        <td colspan = "2"  >GST Payble On Reverse Charge</td>
+                        <td style=""></td>
+
+                </tr>
+
+                <tr>
+                        <td colspan = "2">PAN</td>
+                        <td colspan = "2" class="heading">{{ invoice.pan }}</td>
+                        <td colspan = "3" class="bottom">for,
+                        <div class="top">{{ invoice.authorised_signatory }}</div>
+                        </td>
+
+
+
+                </tr>
+                <tr>
+
+                        <td colspan = "4" class="bottom">Terms And Condition</td>
+                        <td colspan = "3" class="bottom">&nbsp;</td>
+                </tr>
+                <tr style="height:60px">
+                        <td colspan = "4" class="bottom">{{ invoice.terms }}</td>
+                        <td colspan = "3" class="bottom">Authorised Representative</td>
+
+                </tr>
+
+                <tr>
+                        <td colspan = "5" class="heading right">Email</td>
+                        <td colspan="4"> {{ company.contact.email }} </td>
+                </tr>
+
+
+                </table>
+</div>
+
+
+
 </body>
 
 </html>

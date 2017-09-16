@@ -62,11 +62,11 @@ class Item(models.Model):
     description = models.CharField(max_length=100, null=False, blank=False)
     hsn_code = models.CharField(max_length=10, null=True, blank=True)
     quantity_code = models.CharField(max_length=10, null=True, blank=True)
-    quantity = models.FloatField(default=0.0)
-    rate = models.FloatField(default=0.0)
-    value = models.FloatField(default=0.0)
-    discount = models.FloatField(default=0.0)
-    tax_value = models.FloatField(default=0.0)
+    quantity = models.IntegerField(default=0)
+    rate = models.FloatField(default=0.00)
+    value = models.FloatField(default=0.00)
+    discount = models.FloatField(default=0.00)
+    tax_value = models.FloatField(default=0.00,)
 
     def __unicode__(self):
         return self.description
