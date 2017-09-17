@@ -48,7 +48,7 @@ def generate_pdf(request, id=None):
         html_string = render_to_string('frontend/bill.html', context=data)
         html = HTML(string=html_string)
         pdf_file = html.write_pdf()
-        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '//frontend//css//bill_pdf.css')])
+        pdf_file = html.write_pdf(stylesheets=[CSS(settings.STATIC_ROOT + '/frontend/css/bill_pdf.css')])
 
         # Creating http response
         response = HttpResponse(pdf_file, content_type='application/pdf;')
