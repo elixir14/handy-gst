@@ -59,7 +59,7 @@ class InvoiceForm(ModelForm):
     total = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
                             required=False, label="Total", initial=0.0)
     gst_amount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
-                            required=False, label="Tax Amount: GST", initial=0.0)
+                            required=False, label="GST Amount", initial=0.0)
 
     grand_total = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readOnly': 'True'}),
                              required=False, label="Total Amount After Tax", initial=0.0)
@@ -75,9 +75,9 @@ class InvoiceForm(ModelForm):
         model = Invoice
         exclude = ()
         fields = ('company', 'client', 'invoice_no','invoice_date', 'recipient', 'consignee', 'billing_address',
-                  'shipping_address', 'billing_state', 'shipping_state', 'authorised_signatory', 'client_gst',
-                  'account_number', 'cgst' , 'ifsc', 'sgst', 'pan', 'igst', 'remarks', 'gst_amount', 'terms' ,'total',
-                  'grand_total', 'shipping_state_code', 'billing_state_code', 'cgst_total', 'sgst_total', 'igst_total')
+                  'shipping_address', 'billing_state', 'shipping_state', 'client_gst', 'pan',
+                  'account_number', 'ifsc', 'authorised_signatory', 'remarks', 'cgst' , 'sgst', 'igst', 'terms',
+                  'total', 'gst_amount' , 'grand_total', 'shipping_state_code', 'billing_state_code', 'cgst_total', 'sgst_total', 'igst_total')
 
 
 class ItemForm(ModelForm):
@@ -94,12 +94,15 @@ class ItemForm(ModelForm):
                              required=False, initial=0.0)
     discount = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control numeric', 'onKeyup': "Test();"}),
                                 required=False, initial=0.0)
+    discount_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
+                             required=False, initial=0.0)
     tax_value = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': 'True'}),
                                  required=False, label="Taxable Value", initial=0.0)
 
     class Meta:
         model = Item
         exclude = ()
-        fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount', 'tax_value')
+        fields = ('description', 'hsn_code', 'quantity_code', 'quantity', 'rate', 'value', 'discount', 'discount_value',
+                  'tax_value')
 
 ItemFormSet = inlineformset_factory(Invoice, Item, form=ItemForm, extra=1)

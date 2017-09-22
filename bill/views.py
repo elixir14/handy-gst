@@ -32,7 +32,7 @@ def generate_pdf(request, id=None):
             total['quantity'] += item.quantity
             total['rate'] += item.rate
             total['value'] += item.value
-            total['discount'] += item.discount
+            total['discount'] += item.discount_value
             total['tax_value'] += item.tax_value
 
         data = {'invoice': invoice_object,

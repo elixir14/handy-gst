@@ -66,6 +66,7 @@ class Item(models.Model):
     rate = models.FloatField(default=0.00)
     value = models.FloatField(default=0.00)
     discount = models.FloatField(default=0.00)
+    discount_value = models.FloatField(default=0.00)
     tax_value = models.FloatField(default=0.00,)
 
     def __unicode__(self):

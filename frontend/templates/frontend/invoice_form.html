@@ -114,6 +114,7 @@
      {
         var count = parseInt($("#id_item_set-TOTAL_FORMS").val());
         var total = 0.00;
+        var total_tax = 0.00;
         for (i = 0; i < count; i++) {
             var rate = parseFloat($("#id_item_set-" + i + "-rate").val());
             var quantity = parseFloat($("#id_item_set-" + i + "-quantity").val());
@@ -130,10 +131,13 @@
                 discount = 100;
              }
             taxable_value = value
+            var discount_value = 0.00
             if (discount > 0)
             {
-                taxable_value = value*(100-discount)/100;
+                discount_value = value*(discount)/100
+                taxable_value = value - discount_value;
             }
+            $("#id_item_set-" + i + "-discount_value").val(discount_value);
             $("#id_item_set-" + i + "-tax_value").val(taxable_value);
             total = total + taxable_value;
         }
