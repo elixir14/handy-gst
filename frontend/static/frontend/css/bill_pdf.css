@@ -18,13 +18,16 @@ th {
 	padding: 0px 0 0 5px;
 }
 .main {
-    width: 800px;
+    width: 650px;
     margin: auto;
 	font-size: 11px;
 	font-family:arial,helvetica,sans-serif;
 	border-collapse:collapse;
 }
-
+.top {
+    width: 100%;
+    text-align: center;
+}
 .title {
 	font-weight: bold;
 	font-size:16px;

@@ -11,13 +11,16 @@
         <table border="0" cellspacing="0" class="main" >
                 <tr>
                      <td class="border" align="center">
-                        <div class="title">
+                        <div class="title top">
                                 {{ company.company_name }}
                         </div>
-                        <div>
+                        <div class="top">
                                 {{ company.address.address }}, {{company.address.city}}, {{company.address.state}}, {{company.address.zip }}
                         </div>
-                        {{ company.contact.phone_number }}
+                        <div class="top">
+                                {{ company.contact.phone_number }}
+                        </div>
+
                      </td>
                 </tr>
 
@@ -146,7 +149,7 @@
                         <td class="right heading">{{ total.quantity|floatformat:0 }}</td>
                         <td class="right heading"></td>
                         <td class="right heading">{{ total.value|floatformat:2 }}</td>
-                        <td>{{ total.discount|floatformat:2 }}</td>
+                        <td class="right heading">{{ total.discount|floatformat:2 }}</td>
                         <td class="right heading">{{ total.tax_value|floatformat:2 }}</td>
                 </tr>
                 <tr>
@@ -186,7 +189,7 @@
                         <td colspan = "2" class="heading">{{ invoice.account_number }}</td>
                         <td colspan = "2" rowspan="5" class="bottom" >(common seal)</td>
                         <td colspan = "2" >Total Value After Tax(Rs.)</td>
-                        <td style="">{{ invoice.grand_total|floatformat:2 }}</td>
+                        <td class="right">{{ invoice.grand_total|floatformat:2 }}</td>
 
 
                 </tr>
