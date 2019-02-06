@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
+	<classpathentry kind="lib" path="D:/software/External Jars/bcprov-ext-jdk15on-155.jar"/>
+	<classpathentry kind="lib" path="D:/software/External Jars/bcprov-jdk15on-155.jar"/>
+	<classpathentry kind="lib" path="D:/software/External Jars/bcpkix-jdk15on-1.48.jar/bcpkix-jdk15on-1.48.jar"/>
+	<classpathentry kind="lib" path="D:/software/External Jars/commons-codec-1.8.jar/commons-codec-1.8.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

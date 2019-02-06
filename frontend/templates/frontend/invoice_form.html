@@ -1,0 +1,258 @@
+{% extends 'frontend/base.html' %}
+
+{% block title %}Invoice{% endblock %}
+
+{% block javascript %}
+
+<script>
+  var date = new Date();
+    date.setDate(date.getDate()-1);
+    $('#id_invoice_date').datepicker({
+        autoclose: true,
+    });
+  </script>
+
+<script type="text/javascript">
+    // To fill company details
+
+    $("#id_company").change(function () {
+        $company_id = $(this).val();
+        $.ajax({
+            url: 'company_detail/',
+            data: {
+              'id_company': $company_id
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.results) {
+               // console.log(data.results);
+
+                $("#id_account_number").attr("value", data.results.account_number);
+                $("#id_ifsc").attr("value", data.results.ifsc);
+                $("#id_pan").attr("value", data.results.pan);
+                $("#id_remarks").attr("value", data.results.remarks);
+                $("#id_terms").val(data.results.terms);
+                $("#id_authorised_signatory").attr("value", data.results.authorised_signatory);
+                $("#id_cgst").attr("value", data.results.cgst);
+                $("#id_sgst").attr("value", data.results.sgst);
+                $("#id_igst").attr("value", data.results.igst);
+                $("#id_client").empty();
+                id_client = document.getElementById("id_client");
+                id_client.options.add(new Option('-- Select Client --',''))
+                for (index in data.results.clients) {
+                        client = data.results.clients[index]
+                       // alert(client.value);
+                        id_client.options.add(new Option(client.value,client.id))
+                    }
+              }
+            }
+        });
+    });
+
+    // To fill client details
+
+    $("#id_client").change(function () {
+        $client_id = $(this).val();
+        $.ajax({
+            url: 'client_detail/',
+            data: {
+              'id_client': $client_id
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.results) {
+                // console.log(data.results);
+                $("#id_recipient").attr("value", data.results.recipient);
+                $("#id_billing_address").val(data.results.billing_address);
+                $("#id_client_gst").attr("value", data.results.gst);
+                $("#id_billing_address").val(data.results.billing_address);
+                $("#id_billing_state").val(data.results.billing_state).attr("selected","selected");
+                $("#id_billing_state_code").attr("value", data.results.billing_state_code);
+                $("#id_shipping_address").val(data.results.shipping_address);
+                $("#id_shipping_state").val(data.results.shipping_state).attr("selected","selected");
+                $("#id_shipping_state_code").attr("value", data.results.shipping_state_code);
+              }
+            }
+        });
+    });
+
+    $("#id_billing_state").change(function () {
+        $state_name = $(this).val();
+        $.ajax({
+            url: 'state_code/',
+            data: {
+              'state_name': $state_name
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.results) {
+                // console.log(data.results);
+                $("#id_billing_state_code").attr("value", data.results.state_code);
+              }
+            }
+        });
+    });
+
+    $("#id_shipping_state").change(function () {
+        $state_name = $(this).val();
+        $.ajax({
+            url: 'state_code/',
+            data: {
+              'state_name': $state_name
+            },
+            dataType: 'json',
+            success: function (data) {
+              if (data.results) {
+                // console.log(data.results);
+                $("#id_shipping_state_code").attr("value", data.results.state_code);
+              }
+            }
+        });
+    });
+
+     function Test()
+     {
+        var count = parseInt($("#id_item_set-TOTAL_FORMS").val());
+        var total = 0.00;
+        var total_tax = 0.00;
+        for (i = 0; i < count; i++) {
+            var rate = parseFloat($("#id_item_set-" + i + "-rate").val());
+            var quantity = parseFloat($("#id_item_set-" + i + "-quantity").val());
+            rate = rate || 0.00;
+            quantity = quantity || 0.00;
+            var value = rate*quantity;
+            $("#id_item_set-" + i + "-value").val(value);
+            var discount = parseFloat($("#id_item_set-" + i + "-discount").val());
+            if (discount == null && discount == ""){
+                discount = 0.00;
+            }
+            if (discount > 100)
+             {
+                discount = 100;
+             }
+            taxable_value = value
+            var discount_value = 0.00
+            if (discount > 0)
+            {
+                discount_value = value*(discount)/100
+                taxable_value = value - discount_value;
+            }
+            $("#id_item_set-" + i + "-discount_value").val(discount_value);
+            $("#id_item_set-" + i + "-tax_value").val(taxable_value);
+            total = total + taxable_value;
+        }
+        $("#id_total").val(total);
+        cgst = parseFloat($("#id_cgst").val()) || 0.00 ;
+        sgst = parseFloat($("#id_sgst").val()) || 0.00 ;
+        igst = parseFloat($("#id_igst").val()) || 0.00;
+        tax = cgst + sgst + igst ;
+        tax_amount = (total*tax)/100;
+        $("#id_gst_amount").val(tax_amount);
+        $("#id_grand_total").val(total + tax_amount);
+
+        $("#id_cgst_total").val((total*cgst)/100);
+        $("#id_sgst_total").val((total*sgst)/100);
+        $("#id_igst_total").val((total*igst)/100);
+     }
+
+      function Test_New()
+     {
+        var count = parseInt($("#id_item_set-TOTAL_FORMS").val());
+        console.log(count)
+        var total_new = 0.00;
+        for (i = 0; i < count; i++) {
+            var rate = parseFloat($("#id_item_set-" + i + "-rate").val());
+            var quantity = parseFloat($("#id_item_set-" + i + "-quantity").val());
+            var value = rate*quantity;
+            var discount = parseFloat($("#id_item_set-" + i + "-discount").val());
+            var taxable_value = parseFloat($("#id_item_set-" + i + "-tax_value").val());
+            console.log(rate, quantity, value, discount);
+        }
+       // total_new = total_new + taxable_value;
+        $("#id_total").val(total_new);
+     }
+</script>
+{% endblock %}
+
+{% block content %}
+<div id="page-wrapper">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">Generate Invoice</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.non_field_errors }}
+                            <div class="row">
+                                {% for field in form.hidden_fields %}
+                                    {{ field }}
+                                {% endfor %}
+                            {% for field in form.visible_fields  %}
+                                <div>
+                                      <div class="col-lg-2"> {{ field.label }} </div>
+                                      <div class="col-lg-4"> {{ field }}
+                                              <span class="help-block">
+                                                {{ field.errors}}
+                                              </span>
+                                      </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                <table class="table">
+                                    {{ items.management_form }}
+                                    {% for form in items.forms %}
+                                        {% if forloop.first %}
+                                            <thead>
+                                            <tr>
+                                                {% for field in form.visible_fields %}
+                                                    <th>{{ field.label|capfirst }}</th>
+                                                {% endfor %}
+                                            </tr>
+                                            </thead>
+                                        {% endif %}
+                                        <tr class="{% cycle row1 row2 %} formset_row">
+                                            {% for field in form.visible_fields %}
+                                                <td>
+                                                    {# Include the hidden fields in the form #}
+                                                    {% if forloop.first %}
+                                                        {% for hidden in form.hidden_fields %}
+                                                            {{ hidden }}
+                                                        {% endfor %}
+                                                    {% endif %}
+                                                    {{ field.errors.as_ul }}
+                                                    {{ field }}
+                                                </td>
+                                            {% endfor %}
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <button type="submit" class="btn btn-block btn-info btn-fill pull-right">
+                                        Generate
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+            </div>
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /.container-fluid -->
+</div>
+{%endblock%}
