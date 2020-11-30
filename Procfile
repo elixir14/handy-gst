@@ -1,0 +1,1 @@
+web: gunicorn handy-gst.wsgi:application
