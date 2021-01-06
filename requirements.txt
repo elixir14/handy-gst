@@ -1,5 +1,5 @@
 cairocffi==0.8.0
-CairoSVG==1.0.22
+CairoSVG==2.5.1
 cffi==1.10.0
 cssselect2==0.2.0
 Django==1.11.4
