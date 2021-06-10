@@ -2,7 +2,7 @@ cairocffi==0.8.0
 CairoSVG==1.0.22
 cffi==1.10.0
 cssselect2==0.2.0
-Django==1.11.4
+Django==2.2.24
 html5lib==0.999999999
 psycopg2==2.6.2
 pycparser==2.18
